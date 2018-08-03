@@ -72,6 +72,7 @@ void mj::run()
     diagrama = bckgnd;
     for(auto& uptr : nodos)
     {
+      uptr->procesar();
       uptr->dibujarse();
     }
 
@@ -111,8 +112,17 @@ void mj::cb_teclado(char k)
     if(zoom!=1024)
       zoom = zoom*2;
     break;
+  case 'b':
+    ptr_ultimo = crear_nodo<nodo_blur>();
+    break;
   case 'c':
-    ptr_ultimo = crear_nodo<nodo_video>();
+    ptr_ultimo = crear_nodo<nodo_canny>();
+    break;
+  case 'g':
+    ptr_ultimo = crear_nodo<nodo_gris>();
+    break;
+  case 'h':
+    ptr_ultimo = crear_nodo<nodo_hsv>();
     break;
   case 'i':
     for(auto& up : nodos)
@@ -122,6 +132,7 @@ void mj::cb_teclado(char k)
     break;
 
   case 'v':
+    ptr_ultimo = crear_nodo<nodo_video>();
     break;
 
   case '3':
@@ -132,6 +143,13 @@ void mj::cb_teclado(char k)
 
     break;
 
+  case 'x': //cerramos la ventana del objeto seleccionado
+    if(ptr_seleccionado != nullptr)
+    {
+      ptr_seleccionado->b_mostrar = false;
+      cv::destroyWindow(ptr_seleccionado->sid);
+    }
+    break;
 
   }
 }
@@ -220,7 +238,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
   {
     if(ptr_seleccionado != nullptr)
     {
-      //stormbreaker
+      ptr_seleccionado->b_mostrar = true;
     }
   }
 

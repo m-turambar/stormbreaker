@@ -57,6 +57,9 @@ void nodo::dibujarse()
     }
 
   }
+
+  if(b_mostrar)
+    mostrar();
 }
 
 void nodo::arrastrar(const cv::Point pt)
@@ -74,4 +77,9 @@ bool nodo::pertenece_a_area(const cv::Point pt) const //pt debe ser absoluto
   return (x2*x2 + y2*y2 < r2*r2); //esto se hizo porque estaban overfloweando los valores de int
 }
 
-void nodo_video::process() { cap >> vframe; }
+void nodo::suscribir_a(nodo* src)
+{
+  proveedores.push_back(src);
+  msrc = src->mmat;
+}
+
