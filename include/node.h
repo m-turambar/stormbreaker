@@ -25,6 +25,8 @@ struct nodo
   void seleccionar(bool b) { b_seleccionado = b; }
   void highlightear(bool b) { b_highlighteado = b; }
   void suscribir_a(nodo* src) { proveedores.push_back(src); }
+  virtual void process()=0;
+  virtual ~nodo();
 
   std::vector<nodo*> proveedores;
   cv::Point inicio,fin,centro;
@@ -33,6 +35,19 @@ struct nodo
   int radio{50};
   int id;
   static int gid;
+};
+
+struct nodo_video : nodo
+{
+  nodo_video(cv::Point c, int r):
+    nodo(c,r)
+    {
+
+    }
+  virtual ~nodo_video(){}
+  cv::VideoCapture cap{0};
+  cv::Mat vframe;
+  virtual void process() override;
 };
 
 #endif // NODE_H

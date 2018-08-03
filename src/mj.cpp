@@ -6,6 +6,9 @@
 using namespace std;
 using namespace cv;
 
+VideoCapture cap(0);
+Mat vidframe;
+
 cv::Mat mj::diagrama;
 cv::Point mj::despl;
 cv::Point mj::dxy;
@@ -28,17 +31,14 @@ bool b_drag{false};
 
 std::vector<std::unique_ptr<nodo>> mj::nodos;
 
+nodo* ptr_ultimo{nullptr};
+
+template<typename Tipo_Nodo>
+nodo* crear_nodo();
+
 nodo* determinar_propiedades_ubicacion(cv::Point p);
 nodo* encontrar_ptr_area(cv::Point& p);
 void crear_relacion(nodo* src, nodo* dst);
-
-void crear_nodo(nodo& n)
-{
-  if(ptr_seleccionado != nullptr)
-    ptr_seleccionado->seleccionar(false);
-  mj::nodos.emplace_back(std::move(std::make_unique<nodo>(n)));
-  ptr_highlight=ptr_seleccionado=nullptr;
-}
 
 void cb_mouse_static(int event, int x, int y, int flags, void* data)
 {
@@ -62,6 +62,13 @@ void mj::run()
     if(exit)
       break;
 
+    if(b_dibujando_objeto) //dibujamos un objeto temporal
+    {
+      Point hipot = pt_termino - pt_inicio;
+      int radio = std::hypot(hipot.x, hipot.y);
+      ptr_ultimo->radio = radio;
+    }
+
     diagrama = bckgnd;
     for(auto& uptr : nodos)
     {
@@ -71,17 +78,19 @@ void mj::run()
     if(b_dibujando_flecha) //dibujamos una flecha temporal
       arrowedLine(diagrama, transformar(pt_inicio), transformar(pt_termino), COLOR_BLANCO, 2, LINE_AA);
 
-    if(b_dibujando_objeto) //dibujamos un objeto temporal
-    {
-      Point hipot = pt_termino - pt_inicio;
-      int radio = hypot(hipot.x, hipot.y);
-      cv::circle(mj::diagrama, transformar(pt_inicio), transformar_escalar(radio),COLOR_BLANCO, 2, LINE_AA);
-    }
+
 
     imshow(wname,diagrama);
   }
 
 }
+
+auto vid = []() -> cv::Mat {
+      cap >> vidframe;
+      return vidframe;
+    };
+auto l3 = []() -> float { return 3.14; };
+auto l4 = []() -> float { return 42; };
 
 void mj::cb_teclado(char k)
 {
@@ -91,9 +100,7 @@ void mj::cb_teclado(char k)
     break;
   case 13: //tecla enter
     if(b_dibujando_objeto)
-    {
-      terminar_creacion_objeto();
-    }
+      b_dibujando_objeto = false;
     break;
 
   case '+': //zom-in
@@ -105,13 +112,27 @@ void mj::cb_teclado(char k)
       zoom = zoom*2;
     break;
   case 'c':
-    iniciar_creacion_objeto();
+    ptr_ultimo = crear_nodo<nodo_video>();
     break;
   case 'i':
     for(auto& up : nodos)
     {
       cout << "nodo c:" << up->centro << " r:" << up->radio << endl;
     }
+    break;
+
+  case 'v':
+    break;
+
+  case '3':
+
+    break;
+
+  case '4':
+
+    break;
+
+
   }
 }
 
@@ -136,7 +157,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
   {
     /*Si estábamos dibujando un objeto y dimos click, lo insertamos y no hacemos nada más*/
     if(b_dibujando_objeto)
-      terminar_creacion_objeto();
+      b_dibujando_objeto = false;
 
     /*no estábamos dibujando un objeto, evaluamos el punto y establecemos condiciones para la selección y el arrastre*/
     else
@@ -222,24 +243,22 @@ nodo* determinar_propiedades_ubicacion(cv::Point p)
   return (ptr_highlight = ptr); //actualizamos la llave highlight
 }
 
-void mj::iniciar_creacion_objeto()
+template<typename Tipo_Nodo>
+nodo* crear_nodo()
 {
   b_dibujando_objeto = true;
   pt_termino = (pt_inicio = transformacion_inversa(puntoActualMouse));
-}
 
-void mj::terminar_creacion_objeto()
-{
-  cout << "terminando creacion objeton\n";
-  b_dibujando_objeto = false;
+  if(ptr_seleccionado != nullptr)
+    ptr_seleccionado->seleccionar(false);
 
-  {
-    Point hipot = pt_termino - pt_inicio;
-    int radio = hypot(hipot.x, hipot.y);
-    nodo n(pt_inicio, radio);
-    crear_nodo(n);
-  }
-
+  Point hipot = pt_termino - pt_inicio;
+  int radio = hypot(hipot.x, hipot.y);
+  unique_ptr<Tipo_Nodo> uptr = std::make_unique<Tipo_Nodo>(pt_inicio, radio);
+  nodo* ptr_ult = uptr.get();
+  mj::nodos.emplace_back(std::move(uptr));
+  ptr_highlight=ptr_seleccionado=nullptr;
+  return ptr_ult;
 }
 
 void crear_relacion(nodo* src, nodo* dst)

@@ -15,9 +15,6 @@ struct mj
   void cb_teclado(char k);
   void cb_mouse(int event, int x, int y, int flags);
   void run();
-  void iniciar_creacion_objeto();
-  void terminar_creacion_objeto();
-  void dibujar_nodo_temporal();
 
   static cv::Mat diagrama;
   const cv::Scalar bckgnd{cv::Scalar(153,204,0)};

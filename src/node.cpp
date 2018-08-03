@@ -8,6 +8,11 @@ using namespace cv;
 
 int nodo::gid;
 
+nodo::~nodo()
+{
+
+}
+
 Point operator/(Point p, const int d)
 {
   return Point(p.x/d, p.y/d);
@@ -54,17 +59,19 @@ void nodo::dibujarse()
   }
 }
 
-void nodo::arrastrar(const Point pt)
+void nodo::arrastrar(const cv::Point pt)
 {
   fin += pt;
   inicio += pt;
   centro += pt;
 }
 
-bool nodo::pertenece_a_area(const Point pt) const //pt debe ser absoluto
+bool nodo::pertenece_a_area(const cv::Point pt) const //pt debe ser absoluto
 {
   double x2 = double(pt.x - centro.x);
   double y2 = double(pt.y - centro.y);
   double r2 = double(radio);
   return (x2*x2 + y2*y2 < r2*r2); //esto se hizo porque estaban overfloweando los valores de int
 }
+
+void nodo_video::process() { cap >> vframe; }
