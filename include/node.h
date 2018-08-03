@@ -82,7 +82,7 @@ struct nodo_blur : nodo
 
     cv::createTrackbar("kernel_sz", sid, &kernel_sz, 13);
     };
-  int kernel_sz{5}; //modificar desde trackbar
+  int kernel_sz{5};
 };
 
 struct nodo_canny : nodo
@@ -120,4 +120,58 @@ struct nodo_hsv : nodo
   };
 };
 
+struct nodo_erosion_dilacion : nodo
+{
+  nodo_erosion_dilacion(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(23,0,30);
+    }
+  virtual void procesar()
+  {
+    if(!msrc.empty())
+    {
+      kernel_sz = kernel_sz < 1 ? 1 : kernel_sz;
+      auto kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(kernel_sz, kernel_sz));
+      cv::erode(msrc, mmat, kernel, cv::Point(-1,-1), 2);
+      cv::dilate(mmat, mmat, kernel, cv::Point(-1,-1), 2);
+    }
+    cv::createTrackbar("kernel_erode_dil", sid, &kernel_sz, 17);
+  }
+  int kernel_sz{11};
+};
+
+struct nodo_mascara : nodo
+{
+  nodo_mascara(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(0,255,200);
+    }
+  virtual void procesar()
+  {
+    if(!msrc.empty())
+    {
+      cv::inRange(msrc, lower, upper, mmat);
+    }
+  }
+  cv::Scalar lower = {0, 48, 80};
+  cv::Scalar upper = {20, 255, 255};
+};
+
+struct nodo_bitwise_and : nodo
+{
+  nodo_bitwise_and(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(255,0,0);
+    }
+  virtual void procesar()
+  {
+    if(proveedores.size()>=2)
+    {
+      cv::bitwise_and(proveedores[0]->mmat, proveedores[0]->mmat, mmat, proveedores[1]->mmat);
+    }
+  }
+};
 #endif // NODE_H

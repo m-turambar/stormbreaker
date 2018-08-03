@@ -112,11 +112,17 @@ void mj::cb_teclado(char k)
     if(zoom!=1024)
       zoom = zoom*2;
     break;
+  case 'a':
+    ptr_ultimo = crear_nodo<nodo_bitwise_and>();
+    break;
   case 'b':
     ptr_ultimo = crear_nodo<nodo_blur>();
     break;
   case 'c':
     ptr_ultimo = crear_nodo<nodo_canny>();
+    break;
+  case 'e':
+    ptr_ultimo = crear_nodo<nodo_erosion_dilacion>();
     break;
   case 'g':
     ptr_ultimo = crear_nodo<nodo_gris>();
@@ -130,6 +136,9 @@ void mj::cb_teclado(char k)
       cout << "nodo c:" << up->centro << " r:" << up->radio << endl;
     }
     break;
+  case 'p': //piel
+    ptr_ultimo = crear_nodo<nodo_mascara>();
+  break;
 
   case 'v':
     ptr_ultimo = crear_nodo<nodo_video>();
