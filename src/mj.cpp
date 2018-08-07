@@ -38,7 +38,7 @@ nodo* crear_nodo();
 
 nodo* determinar_propiedades_ubicacion(cv::Point p);
 nodo* encontrar_ptr_area(cv::Point& p);
-void crear_relacion(nodo* src, nodo* dst);
+void generar_red_piel();
 
 void cb_mouse_static(int event, int x, int y, int flags, void* data)
 {
@@ -96,6 +96,17 @@ auto l4 = []() -> float { return 42; };
 void mj::cb_teclado(char k)
 {
   switch(k) {
+  case 'd':
+    if(ptr_seleccionado!=nullptr)
+    {
+      auto itr = std::find_if(nodos.begin(), nodos.end(), [&](std::unique_ptr<nodo> const& n)
+            { return n.get() == ptr_seleccionado; });
+      nodos.erase(itr);
+      ptr_seleccionado = ptr_highlight = nullptr;
+      b_drag = false;
+    }
+    break;
+
   case 'q':
     exit=true;
     break;
@@ -136,6 +147,9 @@ void mj::cb_teclado(char k)
       cout << "nodo c:" << up->centro << " r:" << up->radio << endl;
     }
     break;
+  case 'l':
+    ptr_ultimo = crear_nodo<nodo_filtro_bilateral>();
+    break;
   case 'p': //piel
     ptr_ultimo = crear_nodo<nodo_mascara>();
   break;
@@ -158,6 +172,10 @@ void mj::cb_teclado(char k)
       ptr_seleccionado->b_mostrar = false;
       cv::destroyWindow(ptr_seleccionado->sid);
     }
+    break;
+
+  case '9':
+    generar_red_piel();
     break;
 
   }
@@ -219,7 +237,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
     if(b_dibujando_flecha && ptr_seleccionado!=nullptr && dst!=nullptr && dst != ptr_seleccionado)
     {
       std::cout << "{ "  << ptr_seleccionado->id <<"->" << dst->id <<" }\n";
-      crear_relacion(ptr_seleccionado,dst);
+      dst->suscribir_a(ptr_seleccionado);
     }
     b_drag = false;
     b_dibujando_flecha = false;
@@ -247,6 +265,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
   {
     if(ptr_seleccionado != nullptr)
     {
+      std::cout << "mostrando " << ptr_seleccionado->sid << endl;
       ptr_seleccionado->b_mostrar = true;
     }
   }
@@ -288,9 +307,13 @@ nodo* crear_nodo()
   return ptr_ult;
 }
 
-void crear_relacion(nodo* src, nodo* dst)
+template<typename Tipo_Nodo>
+nodo* generar_nodo(cv::Point centro, int radio)
 {
-  dst->suscribir_a(src);
+  unique_ptr<Tipo_Nodo> uptr = std::make_unique<Tipo_Nodo>(centro, radio);
+  nodo* p = uptr.get();
+  mj::nodos.emplace_back(std::move(uptr));
+  return p;
 }
 
 nodo* encontrar_ptr_area(cv::Point& p)
@@ -304,3 +327,24 @@ nodo* encontrar_ptr_area(cv::Point& p)
   return nullptr;
 };
 
+void generar_red_piel()
+{
+  const int radio = 500;
+  nodo* nv = generar_nodo<nodo_video>(cv::Point(radio,radio), radio);
+  nv->procesar(); // 1. necesarios para inicializar las cv::Mat
+  nodo* nhsv = generar_nodo<nodo_hsv>(cv::Point(radio,radio*4), radio);
+  nhsv->suscribir_a(nv);
+  nhsv->procesar(); // 2.
+  nodo* npiel = generar_nodo<nodo_mascara>(cv::Point(radio*4,radio*4), radio);
+  npiel->suscribir_a(nhsv);
+  npiel->procesar(); // 3.
+  nodo* nerodila = generar_nodo<nodo_erosion_dilacion>(cv::Point(radio*8,radio*4), radio);
+  nerodila->suscribir_a(npiel);
+  nerodila->procesar(); // 4.
+  nodo* nblur = generar_nodo<nodo_blur>(cv::Point(radio*12,radio*4), radio);
+  nblur->suscribir_a(nerodila);
+  nblur->procesar(); //5.
+  nodo* nbwand = generar_nodo<nodo_bitwise_and>(cv::Point(radio*12,radio), radio);
+  nbwand->suscribir_a(nv);
+  nbwand->suscribir_a(nblur);
+}

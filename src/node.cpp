@@ -57,6 +57,7 @@ void nodo::dibujarse()
     }
 
   }
+  cv::putText(mj::diagrama, sid, tcentro, FONT_HERSHEY_PLAIN, 1, COLOR_BLANCO, 1, LINE_AA);
 
   if(b_mostrar)
     mostrar();
@@ -64,8 +65,6 @@ void nodo::dibujarse()
 
 void nodo::arrastrar(const cv::Point pt)
 {
-  fin += pt;
-  inicio += pt;
   centro += pt;
 }
 
@@ -79,6 +78,7 @@ bool nodo::pertenece_a_area(const cv::Point pt) const //pt debe ser absoluto
 
 void nodo::suscribir_a(nodo* src)
 {
+  std::cout << "suscribiendo " << sid << " a " << src->sid << ". " << src->sid << " -> " << sid << endl;
   proveedores.push_back(src);
   msrc = src->mmat;
 }
