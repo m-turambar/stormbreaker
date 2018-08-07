@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="stormbreaker" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="/Debug/stormbreaker" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++14" />
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add library="C:/lib/libopencv_core400.dll.a" />
+					<Add library="C:/lib/libopencv_dnn_objdetect400.dll.a" />
+					<Add library="C:/lib/libopencv_dnn400.dll.a" />
+					<Add library="C:/lib/libopencv_highgui400.dll.a" />
+					<Add library="C:/lib/libopencv_imgcodecs400.dll.a" />
+					<Add library="C:/lib/libopencv_imgproc400.dll.a" />
+					<Add library="C:/lib/libopencv_video400.dll.a" />
+					<Add library="C:/lib/libopencv_videoio400.dll.a" />
+					<Add library="C:/lib/libopencv_viz400.dll.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="include/mj.h" />
+		<Unit filename="include/node.h" />
+		<Unit filename="include/observador.h" />
+		<Unit filename="include/rel.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="src/mj.cpp" />
+		<Unit filename="src/node.cpp" />
+		<Unit filename="src/observador.cpp" />
+		<Unit filename="src/rel.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
