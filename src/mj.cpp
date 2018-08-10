@@ -86,12 +86,6 @@ void mj::run()
 
 }
 
-auto vid = []() -> cv::Mat {
-      cap >> vidframe;
-      return vidframe;
-    };
-auto l3 = []() -> float { return 3.14; };
-auto l4 = []() -> float { return 42; };
 
 void mj::cb_teclado(char k)
 {
@@ -142,10 +136,7 @@ void mj::cb_teclado(char k)
     ptr_ultimo = crear_nodo<nodo_hsv>();
     break;
   case 'i':
-    for(auto& up : nodos)
-    {
-      cout << "nodo c:" << up->centro << " r:" << up->radio << endl;
-    }
+    ptr_ultimo = crear_nodo<nodo_im>();
     break;
   case 'l':
     ptr_ultimo = crear_nodo<nodo_filtro_bilateral>();
@@ -154,16 +145,13 @@ void mj::cb_teclado(char k)
     ptr_ultimo = crear_nodo<nodo_mascara>();
   break;
 
+
+  case 'r':
+    ptr_ultimo = crear_nodo<nodo_dnn>();
+    break;
+
   case 'v':
     ptr_ultimo = crear_nodo<nodo_video>();
-    break;
-
-  case '3':
-
-    break;
-
-  case '4':
-
     break;
 
   case 'x': //cerramos la ventana del objeto seleccionado

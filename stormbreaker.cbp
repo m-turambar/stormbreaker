@@ -35,12 +35,10 @@
 		</Compiler>
 		<Unit filename="include/mj.h" />
 		<Unit filename="include/node.h" />
-		<Unit filename="include/observador.h" />
 		<Unit filename="include/rel.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/mj.cpp" />
 		<Unit filename="src/node.cpp" />
-		<Unit filename="src/observador.cpp" />
 		<Unit filename="src/rel.cpp" />
 		<Extensions>
 			<code_completion />

@@ -2,11 +2,13 @@
 #define NODE_H
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/dnn.hpp>
 
 const cv::Scalar COLOR_NEGRO = {0,0,0};
 const cv::Scalar COLOR_BLANCO = {255,255,255};
@@ -40,6 +42,25 @@ struct nodo
   static int gid; //global
   cv::Mat mmat;
   cv::Mat msrc; //ocupada solo por nodos que tengan input
+};
+
+struct nodo_im : nodo
+{
+  nodo_im(cv::Point c, int r):
+    nodo(c,r)
+    {
+      int retorno = system("file_dialog.py > tmp_fname.txt");
+      if(retorno==0) {
+        std::ifstream ifs("tmp_fname.txt", std::ios::in);
+        std::string fname;
+        std::getline(ifs,fname);
+        mmat = cv::imread(fname);
+        sid = fname;
+      }
+      else
+        sid = "Imagen" + sid;
+    }
+  void procesar() {};
 };
 
 struct nodo_video : nodo
@@ -218,5 +239,23 @@ struct nodo_filtro_bilateral : nodo
   }
   int d{5};
   int sigmaColor{150}, sigmaSpace{150};
+};
+
+struct nodo_dnn : nodo
+{
+  nodo_dnn(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(123,123,60);
+      sid = "DNN" + sid;
+      red = cv::dnn::readNetFromTensorflow("something.pb");
+    }
+  virtual void procesar()
+  {
+    if( !msrc.empty() )
+    {
+    }
+  }
+  cv::dnn::Net red;
 };
 #endif // NODE_H
