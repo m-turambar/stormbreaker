@@ -31,7 +31,7 @@ struct nodo
   virtual void suscribir_a(nodo* src);
   void desuscribir_de(nodo* src);
   virtual void procesar()=0;
-  virtual void mostrar() { if(!mmat.empty()) cv::imshow(sid,mmat); }
+  virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid, cv::WINDOW_GUI_EXPANDED); cv::imshow(sid,mmat); } }
   virtual ~nodo();
 
   std::vector<nodo*> proveedores;
