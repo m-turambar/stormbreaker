@@ -53,7 +53,7 @@ struct nodo_im : nodo
   nodo_im(cv::Point c, int r):
     nodo(c,r)
     {
-      int retorno = system("scripts\\file_dialog.py > tmp_fname.txt");
+      int retorno = system("python scripts\\file_dialog.py > tmp_fname.txt");
       if(retorno==0) {
         std::ifstream ifs("tmp_fname.txt", std::ios::in);
         std::string fname;
