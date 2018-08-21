@@ -299,9 +299,17 @@ struct nodo_hough_circulo : nodo
   {
     if( !msrc.empty() )
     {
-
+      mmat = msrc.clone();
+      cv::HoughCircles(msrc, circulos, cv::HOUGH_GRADIENT, 2, msrc.rows/4, 200, 100 );
+      for( size_t i = 0; i < circulos.size(); i++ )
+      {
+        cv::Point center(cvRound(circulos[i][0]), cvRound(circulos[i][1]));
+        int radius = cvRound(circulos[i][2]);
+        cv::circle( mmat, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
+      }
     }
   }
+  std::vector<cv::Vec3f> circulos;
 };
 
 struct nodo_dnn : nodo

@@ -150,6 +150,9 @@ void mj::cb_teclado(char k)
   case 'r':
     ptr_ultimo = crear_nodo<nodo_dnn>();
     break;
+  case 's':
+    ptr_ultimo = crear_nodo<nodo_hough_circulo>();
+    break;
   case 'u':
     ptr_ultimo = crear_nodo<nodo_hsv>();
     break;
