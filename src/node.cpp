@@ -10,7 +10,36 @@ int nodo::gid;
 
 nodo::~nodo()
 {
+  cout << sid << " dtor called\n";
 
+  for(nodo* n : proveedores)
+    desuscribir_de(n);
+
+  for(nodo* n : suscriptores)
+    n->desuscribir_de(this); //oye, me van a destruir, desuscribete de mi rapido
+
+
+}
+
+void nodo::suscribir_a(nodo* src)
+{
+  if(src!=nullptr)
+  {
+    std::cout << "suscribiendo " << sid << " a " << src->sid << ". " << src->sid << " -> " << sid << endl;
+    proveedores.push_back(src);
+    src->suscriptores.push_back(this);
+    msrc = src->mmat;
+  }
+}
+
+void nodo::desuscribir_de(nodo* src)
+{
+  if(src != nullptr)
+  {
+    std::cout << "desuscribiendo a " << sid << " de " << src->sid << endl;
+    proveedores.erase( std::find(proveedores.begin(), proveedores.end(), src) );
+    src->suscriptores.erase( std::find(src->suscriptores.begin(), src->suscriptores.end(), this) );
+  }
 }
 
 Point operator/(Point p, const int d)
@@ -48,11 +77,11 @@ void nodo::dibujarse()
     cv::circle(mj::diagrama, tcentro, tradio, COLOR_HIGHLIGHT_, 1, LINE_AA);
 
   //somos observadores de los nodos que son nuestro input
-  for(auto ptr : proveedores)
+  for(nodo* prov : proveedores)
   {
-    if(ptr != nullptr)
+    if(prov != nullptr)
     {
-      Point prov_centro = transformar(ptr->centro);
+      Point prov_centro = transformar(prov->centro);
       cv::arrowedLine(mj::diagrama, prov_centro, tcentro, COLOR_BLANCO, 1, LINE_AA);
     }
 
@@ -76,10 +105,16 @@ bool nodo::pertenece_a_area(const cv::Point pt) const //pt debe ser absoluto
   return (x2*x2 + y2*y2 < r2*r2); //esto se hizo porque estaban overfloweando los valores de int
 }
 
-void nodo::suscribir_a(nodo* src)
+void nodo::info()
 {
-  std::cout << "suscribiendo " << sid << " a " << src->sid << ". " << src->sid << " -> " << sid << endl;
-  proveedores.push_back(src);
-  msrc = src->mmat;
+  cout << "<" << sid << ">\n";
+  cout << "Mat: " << mmat.type() << '\n';
+  cout << "proveedores:\n";
+  for(nodo* pr : proveedores)
+    cout << "\t" << pr->sid << '\n';
+  cout << "suscriptores:\n";
+  for(nodo* cl : suscriptores)
+    cout << "\t" << cl->sid << '\n';
 }
+
 

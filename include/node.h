@@ -22,17 +22,21 @@ int transformar_escalar(int i);
 struct nodo
 {
   nodo(cv::Point c, int r): centro(c), radio(r), id(gid++), sid(std::to_string(id)) {};
+  void info();
   void dibujarse();
   void arrastrar(const cv::Point pt);
   bool pertenece_a_area(const cv::Point pt) const;
   void seleccionar(bool b) { b_seleccionado = b; }
   void highlightear(bool b) { b_highlighteado = b; }
-  void suscribir_a(nodo* src);
+  virtual void suscribir_a(nodo* src);
+  void desuscribir_de(nodo* src);
   virtual void procesar()=0;
   virtual void mostrar() { if(!mmat.empty()) cv::imshow(sid,mmat); }
   virtual ~nodo();
 
   std::vector<nodo*> proveedores;
+  std::vector<nodo*> suscriptores;
+
   cv::Point centro;
   cv::Scalar mcolor{78,123,200};
   bool b_seleccionado{false}, b_highlighteado{false}, resizeando{false}, b_mostrar{false};
@@ -49,7 +53,7 @@ struct nodo_im : nodo
   nodo_im(cv::Point c, int r):
     nodo(c,r)
     {
-      int retorno = system("file_dialog.py > tmp_fname.txt");
+      int retorno = system("scripts\\file_dialog.py > tmp_fname.txt");
       if(retorno==0) {
         std::ifstream ifs("tmp_fname.txt", std::ios::in);
         std::string fname;
@@ -92,7 +96,7 @@ struct nodo_blur : nodo
   nodo_blur(cv::Point c, int r):
     nodo(c,r)
     {
-      cv::createTrackbar("kernel_sz", sid, &kernel_sz, 13);
+      cv::createTrackbar("kernel_sz", sid, &kernel_sz, 23);
       mcolor = cv::Scalar(100,50,190);
       sid = "blur" + sid;
     }
@@ -125,6 +129,31 @@ struct nodo_canny : nodo
     cv::createTrackbar("umbral", sid, &umbral_borde, 13);
   };
   int umbral_borde{1};
+};
+
+struct nodo_laplace : nodo
+{
+  nodo_laplace(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(230,230,230);
+      sid = "Laplace" + sid;
+    }
+  virtual void procesar()
+  {
+    if(!msrc.empty())
+    {
+      int ksize = sigma | 1;
+      cv::GaussianBlur(msrc, smooth, cv::Size(ksize, ksize), sigma, sigma);
+      cv::Laplacian(smooth, laplaciana, CV_16S, ksize, scale, 0);
+      convertScaleAbs(laplaciana, mmat, (sigma+1)*0.25);
+    }
+    cv::createTrackbar("sigma", sid, &sigma, 13);
+    cv::createTrackbar("scale", sid, &scale, 5);
+  };
+  int sigma{1};
+  int scale{1};
+  cv::Mat laplaciana, smooth;
 };
 
 struct nodo_hsv : nodo
@@ -161,8 +190,8 @@ struct nodo_erosion_dilacion : nodo
       kernel_dilacion_sz = kernel_dilacion_sz < 1 ? 1 : kernel_dilacion_sz;
       auto kernel_erosion = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(kernel_erosion_sz, kernel_erosion_sz));
       auto kernel_dilacion = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(kernel_dilacion_sz, kernel_dilacion_sz));
-      cv::erode(msrc, mmat, kernel_erosion, cv::Point(-1,-1), 3);
-      cv::dilate(mmat, mmat, kernel_dilacion, cv::Point(-1,-1), 3);
+      cv::erode(msrc, mmat, kernel_erosion, cv::Point(-1,-1), 2);
+      cv::dilate(mmat, mmat, kernel_dilacion, cv::Point(-1,-1), 2);
     }
     cv::createTrackbar("kernel_erosion", sid, &kernel_erosion_sz, 19);
     cv::createTrackbar("kernel_dilacion", sid, &kernel_dilacion_sz, 19);
@@ -175,8 +204,8 @@ struct nodo_mascara : nodo
 {
   nodo_mascara(cv::Point c, int r):
       nodo(c,r),
-      hl(0), sl(48), vl(80),
-      hh(20), sh(255), vh(255)
+      hl(0), sl(95), vl(96),
+      hh(20), sh(200), vh(175)
     {
       mcolor = cv::Scalar(0,255,200);
       sid = "mascara" + sid;
@@ -208,14 +237,31 @@ struct nodo_bitwise_and : nodo
       mcolor = cv::Scalar(255,0,0);
       sid = "bitwise_and" + sid;
     }
+
+  void suscribir_a(nodo* src) override
+  {
+    if(src!=nullptr)
+    {
+      std::cout << "suscribiendo " << sid << " a " << src->sid << ". " << src->sid << " -> " << sid << std::endl;
+      proveedores.push_back(src);
+      src->suscriptores.push_back(this);
+      if(src->mmat.type()==0)
+        mmascara = src->mmat;
+      else
+        msrc = src->mmat;
+    }
+  }
+
   virtual void procesar()
   {
     if(proveedores.size()>=2)
     {
       mmat = cv::Scalar(0,0,0);
-      cv::bitwise_and(proveedores[0]->mmat, proveedores[0]->mmat, mmat, proveedores[1]->mmat);
+      cv::bitwise_and(msrc, msrc, mmat, mmascara);
+      //cv::bitwise_and(proveedores[0]->mmat, proveedores[1]->mmat, mmat);
     }
   }
+  cv::Mat mmascara;
 };
 
 struct nodo_filtro_bilateral : nodo
@@ -239,6 +285,23 @@ struct nodo_filtro_bilateral : nodo
   }
   int d{5};
   int sigmaColor{150}, sigmaSpace{150};
+};
+
+struct nodo_hough_circulo : nodo
+{
+  nodo_hough_circulo(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(127,200,40);
+      sid = "Hough circulo" + sid;
+    }
+  virtual void procesar()
+  {
+    if( !msrc.empty() )
+    {
+
+    }
+  }
 };
 
 struct nodo_dnn : nodo

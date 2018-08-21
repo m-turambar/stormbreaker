@@ -90,20 +90,7 @@ void mj::run()
 void mj::cb_teclado(char k)
 {
   switch(k) {
-  case 'd':
-    if(ptr_seleccionado!=nullptr)
-    {
-      auto itr = std::find_if(nodos.begin(), nodos.end(), [&](std::unique_ptr<nodo> const& n)
-            { return n.get() == ptr_seleccionado; });
-      nodos.erase(itr);
-      ptr_seleccionado = ptr_highlight = nullptr;
-      b_drag = false;
-    }
-    break;
 
-  case 'q':
-    exit=true;
-    break;
   case 13: //tecla enter
     if(b_dibujando_objeto)
       b_dibujando_objeto = false;
@@ -126,30 +113,46 @@ void mj::cb_teclado(char k)
   case 'c':
     ptr_ultimo = crear_nodo<nodo_canny>();
     break;
+  case 'd':
+    if(ptr_seleccionado!=nullptr)
+    {
+      auto itr = std::find_if(nodos.begin(), nodos.end(), [&](std::unique_ptr<nodo> const& n)
+            { return n.get() == ptr_seleccionado; });
+      nodos.erase(itr);
+      ptr_seleccionado = ptr_highlight = nullptr;
+      b_drag = false;
+    }
+    break;
   case 'e':
     ptr_ultimo = crear_nodo<nodo_erosion_dilacion>();
+    break;
+  case 'f':
+    ptr_ultimo = crear_nodo<nodo_filtro_bilateral>();
     break;
   case 'g':
     ptr_ultimo = crear_nodo<nodo_gris>();
     break;
   case 'h':
-    ptr_ultimo = crear_nodo<nodo_hsv>();
+    /*Leer el mapa de caracteres e imprimirlo*/
     break;
   case 'i':
     ptr_ultimo = crear_nodo<nodo_im>();
     break;
   case 'l':
-    ptr_ultimo = crear_nodo<nodo_filtro_bilateral>();
+    ptr_ultimo = crear_nodo<nodo_laplace>();
     break;
   case 'p': //piel
     ptr_ultimo = crear_nodo<nodo_mascara>();
-  break;
-
-
+    break;
+  case 'q':
+    exit=true;
+    break;
   case 'r':
     ptr_ultimo = crear_nodo<nodo_dnn>();
     break;
-
+  case 'u':
+    ptr_ultimo = crear_nodo<nodo_hsv>();
+    break;
   case 'v':
     ptr_ultimo = crear_nodo<nodo_video>();
     break;
@@ -161,7 +164,10 @@ void mj::cb_teclado(char k)
       cv::destroyWindow(ptr_seleccionado->sid);
     }
     break;
-
+  case '1':
+    if(ptr_seleccionado!=nullptr)
+      ptr_seleccionado->info();
+    break;
   case '9':
     generar_red_piel();
     break;
