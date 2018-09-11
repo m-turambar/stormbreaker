@@ -6,7 +6,6 @@
 using namespace std;
 using namespace cv;
 
-VideoCapture cap(0);
 Mat vidframe;
 
 cv::Mat mj::diagrama;
@@ -197,11 +196,11 @@ void mj::cb_mouse(int event, int x, int y, int flags)
 
   if(event == EVENT_LBUTTONDOWN)
   {
-    /*Si estábamos dibujando un objeto y dimos click, lo insertamos y no hacemos nada más*/
+    /*Si estï¿½bamos dibujando un objeto y dimos click, lo insertamos y no hacemos nada mï¿½s*/
     if(b_dibujando_objeto)
       b_dibujando_objeto = false;
 
-    /*no estábamos dibujando un objeto, evaluamos el punto y establecemos condiciones para la selección y el arrastre*/
+    /*no estï¿½bamos dibujando un objeto, evaluamos el punto y establecemos condiciones para la selecciï¿½n y el arrastre*/
     else
     {
       auto ptr = determinar_propiedades_ubicacion(transformacion_inversa(puntoActualMouse));
@@ -209,7 +208,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
       if(ptr_seleccionado!=nullptr)
         ptr_seleccionado->seleccionar(false);
 
-      if(ptr == nullptr) //estamos dentro del área de un objeto y dimos click
+      if(ptr == nullptr) //estamos dentro del ï¿½rea de un objeto y dimos click
       {
         ptr_seleccionado=nullptr;
         return;
@@ -221,7 +220,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
       pt_termino = (pt_inicio = transformacion_inversa(puntoActualMouse));
 
       if(flags & EVENT_FLAG_CTRLKEY) //vamos a dibujar flecha, no a arrastrar
-        b_dibujando_flecha = true; //añadir condición
+        b_dibujando_flecha = true; //aï¿½adir condiciï¿½n
       else
         b_drag = true;
     }
@@ -272,7 +271,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
 
 nodo* determinar_propiedades_ubicacion(cv::Point p)
 {
-  nodo* ptr = encontrar_ptr_area(p); //obtenemos un apuntador al objeto que es dueño de esa área
+  nodo* ptr = encontrar_ptr_area(p); //obtenemos un apuntador al objeto que es dueï¿½o de esa ï¿½rea
 
   if(ptr_highlight!=nullptr)
       ptr_highlight->highlightear(false);//des-highlighteamos el anterior
@@ -317,7 +316,7 @@ nodo* encontrar_ptr_area(cv::Point& p)
 {
   for(const auto& uptr : mj::nodos)
   {
-    if(uptr->pertenece_a_area(p)) //si el punto cae dentro del área de un objeto...
+    if(uptr->pertenece_a_area(p)) //si el punto cae dentro del ï¿½rea de un objeto...
       return uptr.get();
   }
 

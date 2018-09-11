@@ -73,9 +73,10 @@ struct nodo_video : nodo
     nodo(c,r)
     {
       sid = "Video" + sid;
+      cap.open("/dev/video0");
     }
   virtual ~nodo_video(){}
-  cv::VideoCapture cap{0};
+  cv::VideoCapture cap;
   virtual void procesar() { cap >> mmat; };
 };
 
