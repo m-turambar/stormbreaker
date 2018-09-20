@@ -1,7 +1,6 @@
 #include <memory>
 #include "mj.h"
 #include "node.h"
-#include "rel.h"
 
 using namespace std;
 using namespace cv;
@@ -140,6 +139,9 @@ void mj::cb_teclado(char k)
   case 'l':
     ptr_ultimo = crear_nodo<nodo_laplace>();
     break;
+  case 'm':
+    ptr_ultimo = crear_nodo<nodo_caffe>();
+    break;
   case 'p': //piel
     ptr_ultimo = crear_nodo<nodo_mascara>();
     break;
@@ -162,7 +164,7 @@ void mj::cb_teclado(char k)
   case 'x': //cerramos la ventana del objeto seleccionado
     if(ptr_seleccionado != nullptr)
     {
-      ptr_seleccionado->b_mostrar = false;
+      ptr_seleccionado->b_mostrar = false; //WARN: esto se setea en DOUBLE_CLICK, estar seguro de ser safe
       cv::destroyWindow(ptr_seleccionado->sid);
     }
     break;
@@ -262,7 +264,7 @@ void mj::cb_mouse(int event, int x, int y, int flags)
     if(ptr_seleccionado != nullptr)
     {
       std::cout << "mostrando " << ptr_seleccionado->sid << endl;
-      ptr_seleccionado->b_mostrar = true;
+      ptr_seleccionado->actuar();
     }
   }
 

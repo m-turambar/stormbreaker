@@ -1,8 +1,11 @@
 #include <vector>
 #include <iostream>
 #include "tensor_mk.hpp"
+#include "tensorflow/core/public/session.h"
+#include "tensorflow/core/platform/env.h"
 #include "tensorflow/core/protobuf/meta_graph.pb.h"
 #include "tensorflow/core/public/session_options.h"
+#include "tensorflow/cc/saved_model/loader.h"
 
 void checkStatus(const tensorflow::Status& status) {
   if (!status.ok()) {
@@ -22,6 +25,7 @@ tensorflow::Status cargar_modelo(tensorflow::Session* sess, std::string graph_fn
     /* Leemos la grafica del protobuf que exportamos */
     tf::MetaGraphDef graph_def;
     status = tf::ReadBinaryProto(tf::Env::Default(), graph_fn, &graph_def);
+    //status = tf::LoadSavedModel();
     if(status != tf::Status::OK()) return status;
 
     std::cout << "binario leido\n";
@@ -40,7 +44,7 @@ tensorflow::Status cargar_modelo(tensorflow::Session* sess, std::string graph_fn
         mtensor.scalar<std::string>()() = checkpoint_fn;
 
         tensor_dict mdict = {{archivo_nombre_tensor, mtensor}};
-        
+
         status = sess->Run(mdict, {}, {restore_op_name}, nullptr);
         if(status != tf::Status::OK()) return status;
     }
@@ -51,18 +55,44 @@ tensorflow::Status cargar_modelo(tensorflow::Session* sess, std::string graph_fn
         status = sess->Run( {}, {}, {"init"}, nullptr);
         if(status != tf::Status::OK()) return status;
     }
+    return status;
 }
 
 using namespace std;
 
-int tensor_main(char* modelo_bin, char* modelo_ckpt)
+tensorflow::Status foobar(tensorflow::Session* sess, tensorflow::SessionOptions sessOpt, std::string export_dir)
+{
+    namespace tf = tensorflow;
+
+    std::unordered_set<string> tags;
+
+    tf::SavedModelBundle bundle;
+    tf::Status load_status = tf::LoadSavedModel(
+    sessOpt, tf::RunOptions(), export_dir, tags, &bundle);
+    if (!load_status.ok()) {
+        std::cout << "Error loading model: " << load_status << std::endl;
+        exit(-1);
+    }
+    cout << "Modelo cargado";
+
+    /* Creamos una gráfica en la sessión actual */
+    //bundle.session->Run(bundle.meta_graph_def);
+    //if(status != tf::Status::OK()) return status;
+
+    return tf::Status::OK();
+}
+
+int tensor_main(char* dir_modelo)
 {
     namespace tf = tensorflow;
 
     tf::Session* sess;
     tf::SessionOptions opciones;
     TF_CHECK_OK(tf::NewSession(opciones, &sess));
-    TF_CHECK_OK(cargar_modelo(sess, modelo_bin, modelo_ckpt));
+    bool bb = tf::MaybeSavedModelDirectory(dir_modelo);
+    cout << "\n\n\ndirectorio valido? " << bb << "\n";
+
+    //TF_CHECK_OK(cargar_modelo(sess, modelo_bin, modelo_ckpt));
 
 
 

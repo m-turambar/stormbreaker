@@ -1,5 +1,6 @@
 #include "node.h"
 #include "mj.h"
+#include "caffe_mk.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -49,7 +50,7 @@ Point operator/(Point p, const int d)
 
 Point transformar(const Point p)
 {
-  Point pp = mj::dxy + (p - mj::dxy - mj::despl)/mj::zoom; //mj::dxy es la mitad del tamaño del diagrama
+  Point pp = mj::dxy + (p - mj::dxy - mj::despl)/mj::zoom; //mj::dxy es la mitad del tamaï¿½o del diagrama
   return pp;
 }
 
@@ -117,4 +118,12 @@ void nodo::info()
     cout << "\t" << cl->sid << '\n';
 }
 
+void nodo_caffe::actuar()
+{
+  b_mostrar = false;
+  if( !msrc.empty() )
+  {
+    predecir_etiquetas(msrc);
+  }
+}
 

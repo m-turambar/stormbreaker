@@ -31,7 +31,8 @@ struct nodo
   virtual void suscribir_a(nodo* src);
   void desuscribir_de(nodo* src);
   virtual void procesar()=0;
-  virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid, cv::WINDOW_GUI_EXPANDED); cv::imshow(sid,mmat); } }
+  virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid/*, cv::WINDOW_GUI_EXPANDED*/); cv::imshow(sid,mmat); } }
+  virtual void actuar() { b_mostrar = true; }
   virtual ~nodo();
 
   std::vector<nodo*> proveedores;
@@ -75,9 +76,9 @@ struct nodo_video : nodo
       sid = "Video" + sid;
       cap.open("/dev/video0");
     }
-  virtual ~nodo_video(){}
+  virtual ~nodo_video() {}
   cv::VideoCapture cap;
-  virtual void procesar() { cap >> mmat; };
+  virtual void procesar() override { cap >> mmat; };
 };
 
 struct nodo_gris : nodo
@@ -320,14 +321,32 @@ struct nodo_dnn : nodo
     {
       mcolor = cv::Scalar(123,123,60);
       sid = "DNN" + sid;
-      red = cv::dnn::readNetFromTensorflow("something.pb");
     }
   virtual void procesar()
   {
     if( !msrc.empty() )
     {
+
     }
   }
-  cv::dnn::Net red;
+
 };
+
+struct nodo_caffe : nodo
+{
+  nodo_caffe(cv::Point c, int r):
+    nodo(c,r)
+    {
+      mcolor = cv::Scalar(12,240,20);
+      sid = "Caffe" + sid;
+    }
+  virtual void procesar()
+  {
+    
+  }
+  virtual void actuar() override;
+
+};
+
+
 #endif // NODE_H

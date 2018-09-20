@@ -7,25 +7,24 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="/Debug/stormbreaker" prefix_auto="1" extension_auto="1" />
+				<Option output="./Debug/stormbreaker" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="~/src/ppe-prediction/models/faster-rcnn/frozen-model/saved_model" />
 				<Compiler>
+					<Add option="-march=corei7" />
 					<Add option="-std=c++14" />
-					<Add option="-g" />
 					<Add directory="include" />
+					<Add directory="/usr/local/include/google/tensorflow" />
+					<Add directory="/usr/local/include/eigen3" />
+					<Add directory="/usr/local/cuda/include" />
 				</Compiler>
 				<Linker>
-					<Add library="C:/lib/libopencv_core400.dll.a" />
-					<Add library="C:/lib/libopencv_dnn_objdetect400.dll.a" />
-					<Add library="C:/lib/libopencv_dnn400.dll.a" />
-					<Add library="C:/lib/libopencv_highgui400.dll.a" />
-					<Add library="C:/lib/libopencv_imgcodecs400.dll.a" />
-					<Add library="C:/lib/libopencv_imgproc400.dll.a" />
-					<Add library="C:/lib/libopencv_video400.dll.a" />
-					<Add library="C:/lib/libopencv_videoio400.dll.a" />
-					<Add library="C:/lib/libopencv_viz400.dll.a" />
+					<Add option="-lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_video -lopencv_videoio" />
+					<Add option="-ltensorflow_framework -ltensorflow_cc" />
+					<Add option="-lcublas -lcufft -lcurand -lcusolver" />
+					<Add directory="/usr/local/cuda/lib64" />
 				</Linker>
 			</Target>
 		</Build>
@@ -33,13 +32,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/caffe_mk.h" />
 		<Unit filename="include/mj.h" />
 		<Unit filename="include/node.h" />
-		<Unit filename="include/rel.h" />
+		<Unit filename="include/tensor_mk.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/caffe_mk.cpp" />
 		<Unit filename="src/mj.cpp" />
 		<Unit filename="src/node.cpp" />
-		<Unit filename="src/rel.cpp" />
+		<Unit filename="src/tensor_mk.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
