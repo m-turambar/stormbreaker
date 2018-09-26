@@ -1,6 +1,7 @@
 #include "node.h"
 #include "mj.h"
 #include "caffe_mk.h"
+#include "dlib_mk.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -118,12 +119,69 @@ void nodo::info()
     cout << "\t" << cl->sid << '\n';
 }
 
+void nodo_dnn::procesar()
+  {
+    if( !msrc.empty() )
+    {
+      int dx = (msrc.cols - msrc.rows)/2;
+      if(dx < 0)
+      {
+        dx = (msrc.rows - msrc.cols)/2;
+        mmat = msrc.rowRange(dx, msrc.rows - dx);
+      }
+      else
+      {
+        mmat = msrc.colRange(dx, msrc.cols - dx);
+      }
+      cv::resize(mmat, mmat, cv::Size(300,300) );
+      
+      cv::Mat blob = cv::dnn::blobFromImage(mmat, 1.0, cv::Size(300,300), cv::Scalar(104,177,123) );
+      net.setInput(blob);
+      cv::Mat fw = net.forward();
+      cv::Size sz = fw.size();
+      /*Las detecciones empiezan por el índice 2, y las coordenadas son los 4
+        subsecuentes valores. La matriz ya regresa sorteada, no sé porqué cada entrada
+        tiene 7 valores extra de profundidad, pero no los estoy usando. Teóricamente
+        si tomo el índice 9(?), me dé la probabilidad de la segunda cara por aparecer,
+        y los siguientes 4 índices las regiones de ésta. */
+      float proba = fw.at<cv::Vec3f>(0,0)[2];
+      cout << "proba = " << proba << "%\n";
+      const int w{mmat.cols}, h{mmat.rows};
+      int xi = fw.at<cv::Vec3f>(0,0)[3]*mmat.rows;
+      int yi = fw.at<cv::Vec3f>(0,0)[4]*mmat.cols;
+      int xf = fw.at<cv::Vec3f>(0,0)[5]*mmat.rows;
+      int yf = fw.at<cv::Vec3f>(0,0)[6]*mmat.cols;
+      //cout << "{" << xi << ", " << xf << "} {" << yi << ", " << yf << "}\n";
+      cout << fw.at<cv::Vec3f>(0,0)[9] << endl;
+      //cv::Point pi(xi,yi), pf(xf,yf);
+      xi = xi < 0 ? 0 : xi;
+      yi = yi < 0 ? 0 : yi;
+      xf = xf > mmat.rows ? mmat.rows : xf;
+      yf = yf > mmat.cols ? mmat.cols : yf;
+
+      cv::Rect roi_f(cv::Point(xi,yi), cv::Point(xf,yf));
+      cv::rectangle(mmat, roi_f, cv::Scalar(20,20,230), 1, 8, 0);
+      Mat cara = mmat(roi_f);
+      alinear_cara(cara);
+    }
+  }
+
+void nodo_caffe::procesar()
+  {
+    if( !msrc.empty() )
+    {
+      predecir_etiquetas(msrc);
+    }
+    
+  }
+
 void nodo_caffe::actuar()
 {
-  b_mostrar = false;
+  //b_mostrar = false;
   if( !msrc.empty() )
   {
-    predecir_etiquetas(msrc);
+    mmat = msrc;
+    predecir_etiquetas(mmat);
   }
 }
 

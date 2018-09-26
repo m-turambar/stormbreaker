@@ -47,7 +47,7 @@ void cb_mouse_static(int event, int x, int y, int flags, void* data)
 mj::mj()
 {
   namedWindow(wname);
-  diagrama = Mat(800,1200,CV_8UC3, bckgnd);
+  diagrama = Mat(400,600,CV_8UC3, bckgnd);
   setMouseCallback(wname,cb_mouse_static,this);
 }
 
@@ -164,8 +164,7 @@ void mj::cb_teclado(char k)
   case 'x': //cerramos la ventana del objeto seleccionado
     if(ptr_seleccionado != nullptr)
     {
-      ptr_seleccionado->b_mostrar = false; //WARN: esto se setea en DOUBLE_CLICK, estar seguro de ser safe
-      cv::destroyWindow(ptr_seleccionado->sid);
+      ptr_seleccionado->desactivar();
     }
     break;
   case '1':

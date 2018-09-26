@@ -20,7 +20,9 @@ add_executable (stormbreaker
     src/mj.cpp
     src/node.cpp
     src/tensor_mk.cpp
-    src/caffe_mk.cpp)
+    src/caffe_mk.cpp
+    src/dlib_mk.cpp
+    src/resnet.cpp)
 
 # Make sure the compiler can find include files for our Hello library
 # when other libraries or executables link to Hello

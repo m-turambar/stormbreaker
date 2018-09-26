@@ -15,21 +15,14 @@ using namespace caffe;  // NOLINT(build/namespaces)
 using namespace std;
 using cv::Mat;
 
-Classifier mClassifier;
-
-/* para que se usa esto? */
-static bool PairCompare(const std::pair<float, int>& lhs, const std::pair<float, int>& rhs) 
-{
-  return lhs.first > rhs.first;
-}
-
+unique_ptr<Classifier> mClassifier;
 
 Classifier::Classifier(const string& model_file, const string& trained_file, const string& mean_file, const string& label_file) 
 {
   Caffe::set_mode(Caffe::GPU);
 
   /* Load the network. */
-  net.reset(new Net<float>(model_file, TEST));
+  net.reset(new Net<float>(model_file, TEST)); /* TEST es un enum de caffe.pb.h donde */
   net->CopyTrainedLayersFrom(trained_file);
 
   CHECK_EQ(net->num_inputs(), 1) << "Network should have exactly one input.";
@@ -41,9 +34,9 @@ Classifier::Classifier(const string& model_file, const string& trained_file, con
   CHECK(num_channels == 3 || num_channels == 1) << "Input layer should have 1 or 3 channels.";
 
   input_geometry = cv::Size(input_layer->width(), input_layer->height());
-
+  std::cout << "estableciendo promedio...\n";
   /* Load the binaryproto mean file. */
-  SetMean(mean_file);
+  set_mean(mean_file);
 
   /* Load labels. */
   std::ifstream label_ifs(label_file.c_str());
@@ -56,6 +49,13 @@ Classifier::Classifier(const string& model_file, const string& trained_file, con
   Blob<float>* output_layer = net->output_blobs()[0];
   CHECK_EQ(labels.size(), output_layer->channels())
     << "Number of labels is different from the output layer dimension.";
+  cout << "Classifier ctor: \n"
+       << "model_file = " << model_file << endl
+       << "trained_file = " << trained_file << endl
+       << "mean file = " << mean_file << endl
+       << "label_file = " << label_file << endl
+       << "input_geometry = " << input_geometry << endl
+       << "mean = " << mean.size << " " << mean.channels() << endl;
 }
 
 
@@ -65,7 +65,13 @@ static std::vector<int> Argmax(const std::vector<float>& v, int N)
   vector<pair<float, int> > pairs;
   for (size_t i = 0; i < v.size(); ++i)
     pairs.push_back(make_pair(v[i], i));
-  std::partial_sort(pairs.begin(), pairs.begin() + N, pairs.end(), PairCompare);
+
+  std::partial_sort(pairs.begin(), pairs.begin() + N, pairs.end(), []
+    (const std::pair<float, int>& lhs, const std::pair<float, int>& rhs) 
+    {
+      return lhs.first > rhs.first;
+    }
+    );
 
   vector<int> result;
   for (int i = 0; i < N; ++i)
@@ -91,7 +97,7 @@ vector<Prediction> Classifier::Classify(const Mat& img, int N) {
 }
 
 /* Load the mean file in binaryproto format. */
-void Classifier::SetMean(const string& mean_file) {
+void Classifier::set_mean(const string& mean_file) {
   BlobProto blob_proto;
   ReadProtoFromBinaryFileOrDie(mean_file.c_str(), &blob_proto);
 
@@ -108,18 +114,17 @@ void Classifier::SetMean(const string& mean_file) {
     /* Extract an individual channel. */
     Mat channel(mean_blob.height(), mean_blob.width(), CV_32FC1, data);
     channels.push_back(channel);
-    data += mean_blob.height() * mean_blob.width();
+    data += mean_blob.height() * mean_blob.width(); //literal desplaza el pointer un canal completo
   }
 
   /* Merge the separate channels into a single image. */
-  Mat mean;
-  cv::merge(channels, mean);
+  Mat mean2;
+  cv::merge(channels, mean2);
 
   /* Compute the global mean pixel value and create a mean image
    * filled with this value. */
-  cv::Scalar channel_mean = cv::mean(mean);
-  mean = Mat(input_geometry, mean.type(), channel_mean);
-  cout << "mean: " << mean.size << " " << mean.channels() << endl;
+  cv::Scalar channel_mean = cv::mean(mean2);
+  mean = Mat(input_geometry, mean2.type(), channel_mean);
 }
 
 vector<float> Classifier::Predict(const Mat& img) 
@@ -131,9 +136,9 @@ vector<float> Classifier::Predict(const Mat& img)
   net->Reshape();
 
   vector<Mat> input_channels;
-  WrapInputLayer(&input_channels);
+  wrap_input_layer(&input_channels);
 
-  Preprocess(img, &input_channels);
+  preprocess(img, &input_channels);
 
   net->Forward();
 
@@ -149,7 +154,7 @@ vector<float> Classifier::Predict(const Mat& img)
  * don't need to rely on cudaMemcpy2D. The last preprocessing
  * operation will write the separate channels directly to the input
  * layer. */
-void Classifier::WrapInputLayer(std::vector<Mat>* input_channels)
+void Classifier::wrap_input_layer(std::vector<Mat>* input_channels)
 {
   Blob<float>* input_layer = net->input_blobs()[0];
   int width = input_layer->width();
@@ -163,12 +168,10 @@ void Classifier::WrapInputLayer(std::vector<Mat>* input_channels)
   }
 }
 
-void Classifier::Preprocess(const Mat& img, std::vector<Mat>* input_channels)
+void Classifier::preprocess(const Mat& img, std::vector<Mat>* input_channels)
 {
   /* Convert the input image to the input image format of the network. */
   Mat sample;
-  cout << "imagen: rows=" << img.rows << " cols=" << img.cols << " channels=" << img.channels() << endl;
-  cout << "num_channels=" << num_channels << endl;
   if (img.channels() == 3 && num_channels == 1)
     cv::cvtColor(img, sample, cv::COLOR_BGR2GRAY);
   else if (img.channels() == 4 && num_channels == 1)
@@ -181,7 +184,6 @@ void Classifier::Preprocess(const Mat& img, std::vector<Mat>* input_channels)
     sample = img.clone();
 
   Mat sample_resized;
-  cout << sample.size() << " vs " << input_geometry << endl;
   if (sample.size() != input_geometry)
     cv::resize(sample, sample_resized, input_geometry);
   else
@@ -193,16 +195,12 @@ void Classifier::Preprocess(const Mat& img, std::vector<Mat>* input_channels)
   else
     sample_resized.convertTo(sample_float, CV_32FC1);
 
-  cout << "about to substract\n";
-  cout << "sample float: " << sample_float.size << " " << sample_float.channels() << endl;
-  cout << "mean: " << mean.size << " " << mean.channels() << endl;
   Mat sample_normalized;
   cv::subtract(sample_float, mean, sample_normalized);
 
   /* This operation will write the separate BGR planes directly to the
    * input layer of the network because it is wrapped by the Mat
    * objects in input_channels. */
-  cout << "about to split\n";
   cv::split(sample_normalized, *input_channels);
 
   CHECK(reinterpret_cast<float*>(input_channels->at(0).data)  ==  net->input_blobs()[0]->cpu_data() )
@@ -224,7 +222,7 @@ int cargar_modelo(int argc, char** argv) {
   string trained_file = argv[2];
   string mean_file    = argv[3];
   string label_file   = argv[4];
-  mClassifier = Classifier(model_file, trained_file, mean_file, label_file);
+  mClassifier = make_unique<Classifier>(model_file, trained_file, mean_file, label_file);
  
   return 0;
 }
@@ -233,16 +231,17 @@ void predecir_etiquetas(Mat& img)
 {
   CHECK(!img.empty()) << "Unable to decode image";
 
-  cout << "mean al entrar a prediccion:\n" << mClassifier.mean.size << " " << mClassifier.mean.channels() << endl;
-
   /******************************************************/
-  std::vector<Prediction> predictions = mClassifier.Classify(img);
+  std::vector<Prediction> predictions = mClassifier->Classify(img);
   /******************************************************/
 
   /* Print the top N predictions. Que hace std::fixed? */
-  for (auto p : predictions) {
+  /*for (auto p : predictions) {
     std::cout << std::fixed << std::setprecision(4) << p.second << " - \""
               << p.first << "\"" << std::endl;
   }
+  */
+  std::cout << std::fixed << std::setprecision(4) << predictions[0].first << " - \""
+            << predictions[0].second << "\"" << endl;
 }
 

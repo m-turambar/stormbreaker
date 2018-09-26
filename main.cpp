@@ -7,6 +7,7 @@
 #include "node.h"
 #include "tensor_mk.hpp"
 #include "caffe_mk.h"
+#include "dlib_mk.h"
 
 
 using namespace std;
@@ -23,10 +24,11 @@ int main(int argc, char** argv)
     }
     mj mjol;
     //tensor_main(argv[1]);
+    init_dlib_mk();
 
-    cout << "cargando modelo en caffe... ";
-    cargar_modelo(argc, argv);
-    cout << " hecho.\n";
+    //cout << "cargando modelo en caffe... ";
+    //cargar_modelo(argc, argv);
+    //cout << " hecho.\n";
     
     mjol.run();
     return 0;

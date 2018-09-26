@@ -19,6 +19,9 @@ cv::Point transformar(const cv::Point p);
 cv::Point transformacion_inversa(const cv::Point pp);
 int transformar_escalar(int i);
 
+using std::cout;
+using std::endl;
+
 struct nodo
 {
   nodo(cv::Point c, int r): centro(c), radio(r), id(gid++), sid(std::to_string(id)) {};
@@ -33,6 +36,7 @@ struct nodo
   virtual void procesar()=0;
   virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid/*, cv::WINDOW_GUI_EXPANDED*/); cv::imshow(sid,mmat); } }
   virtual void actuar() { b_mostrar = true; }
+  virtual void desactivar() { b_mostrar = false; cv::destroyWindow(sid); }
   virtual ~nodo();
 
   std::vector<nodo*> proveedores;
@@ -54,7 +58,7 @@ struct nodo_im : nodo
   nodo_im(cv::Point c, int r):
     nodo(c,r)
     {
-      int retorno = system("python scripts\\file_dialog.py > tmp_fname.txt");
+      int retorno = system("python3 /home/mike/proyectos/stormbreaker/scripts/file_dialog.py > tmp_fname.txt");
       if(retorno==0) {
         std::ifstream ifs("tmp_fname.txt", std::ios::in);
         std::string fname;
@@ -321,15 +325,12 @@ struct nodo_dnn : nodo
     {
       mcolor = cv::Scalar(123,123,60);
       sid = "DNN" + sid;
+      net = cv::dnn::readNetFromCaffe("/home/mike/src/deep-learning-face-detection/deploy.prototxt", 
+                                      "/home/mike/src/deep-learning-face-detection/res10_300x300_ssd_iter_140000.caffemodel");
     }
-  virtual void procesar()
-  {
-    if( !msrc.empty() )
-    {
-
-    }
-  }
-
+  virtual void procesar() override;
+  virtual void desactivar() override { b_mostrar = false; }
+  cv::dnn::Net net;
 };
 
 struct nodo_caffe : nodo
@@ -340,10 +341,7 @@ struct nodo_caffe : nodo
       mcolor = cv::Scalar(12,240,20);
       sid = "Caffe" + sid;
     }
-  virtual void procesar()
-  {
-    
-  }
+  virtual void procesar() override;
   virtual void actuar() override;
 
 };

@@ -16,7 +16,7 @@ struct mj
   void run();
 
   static cv::Mat diagrama;
-  const cv::Scalar bckgnd{cv::Scalar(153,204,0)};
+  const cv::Scalar bckgnd{cv::Scalar(153,25,130)};
   bool exit{false};
   const std::string wname = "sbreaker";
   static cv::Point dxy;
