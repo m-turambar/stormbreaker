@@ -22,7 +22,8 @@ add_executable (stormbreaker
     src/tensor_mk.cpp
     src/caffe_mk.cpp
     src/dlib_mk.cpp
-    src/resnet.cpp)
+    src/resnet.cpp
+    src/sistema_archivos.cpp)
 
 # Make sure the compiler can find include files for our Hello library
 # when other libraries or executables link to Hello
@@ -35,6 +36,6 @@ target_include_directories (stormbreaker PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # Link the executable to the Hello library. Since the Hello library has
 # public include directories we will use those link directories when building
 # helloDemo
-target_link_libraries (stormbreaker ${OpenCV_LIBS} tensorflow_cc tensorflow_framework dlib::dlib caffe protobuf glog boost_system)
+target_link_libraries (stormbreaker ${OpenCV_LIBS} tensorflow_cc tensorflow_framework dlib::dlib caffe protobuf glog boost_system stdc++fs)
 
 

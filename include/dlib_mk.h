@@ -12,7 +12,7 @@
 #include <dlib/pixel.h>
 
 int init_dlib_mk();
-void alinear_cara(cv::Mat& crop);
+dlib::matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop);
 
 int deserialize_resnet();
 std::vector<dlib::matrix<float,0,1>> get_face_features(std::vector<dlib::matrix<dlib::rgb_pixel> >cara);

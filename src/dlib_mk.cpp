@@ -30,7 +30,7 @@ int init_dlib_mk()
 }
 
 /*crop is expected to be a face only*/
-void alinear_cara(cv::Mat& crop)
+matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop)
 {
     Mat crop_rgb;
     cv::cvtColor(crop, crop_rgb, cv::COLOR_BGR2RGB);
@@ -53,13 +53,13 @@ void alinear_cara(cv::Mat& crop)
     matrix<rgb_pixel> cara;
     extract_image_chip(img, get_face_chip_details(shape,150,0.25), cara);
     caras.push_back(std::move(cara));
-    win_aligned.set_image(caras[0]);
+    //win_aligned.set_image(caras[0]);
     
     std::vector<matrix<float,0,1>> fds = get_face_features(caras);
-    matrix<float,0,1> descriptores = fds[0];
-    for(auto f : descriptores)
-        cout << f << " ";
-    cout << '\n';
-    //cout << descriptores.size() << endl;
+    //std::vector<float> descriptores(fds[0].begin(),fds[0].end());
+    //for(auto f : descriptores)
+    //    cout << f << " ";
+    //cout << '\n';
+    return fds[0];
 }
 

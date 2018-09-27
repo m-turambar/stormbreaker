@@ -10,6 +10,10 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/dnn.hpp>
 
+#include "dlib_mk.h"
+#include <dlib/opencv/cv_image.h>
+#include <dlib/pixel.h>
+
 const cv::Scalar COLOR_NEGRO = {0,0,0};
 const cv::Scalar COLOR_BLANCO = {255,255,255};
 const cv::Scalar COLOR_SELECCION(50, 255, 25);
@@ -18,6 +22,8 @@ const cv::Scalar COLOR_HIGHLIGHT_(150, 215, 50);
 cv::Point transformar(const cv::Point p);
 cv::Point transformacion_inversa(const cv::Point pp);
 int transformar_escalar(int i);
+
+std::vector<std::string> get_file_names(std::string dir_name);
 
 using std::cout;
 using std::endl;
@@ -37,6 +43,7 @@ struct nodo
   virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid/*, cv::WINDOW_GUI_EXPANDED*/); cv::imshow(sid,mmat); } }
   virtual void actuar() { b_mostrar = true; }
   virtual void desactivar() { b_mostrar = false; cv::destroyWindow(sid); }
+  void make_mmat_squared();
   virtual ~nodo();
 
   std::vector<nodo*> proveedores;
@@ -70,6 +77,55 @@ struct nodo_im : nodo
         sid = "Imagen" + sid;
     }
   void procesar() {};
+};
+
+
+struct nodo_iter_dir : nodo
+{
+  nodo_iter_dir(cv::Point c, int r):
+    nodo(c,r)
+    {
+      int retorno = system("python3 /home/mike/proyectos/stormbreaker/scripts/directory_dialog.py > tmp_fname.txt");
+      if(retorno==0) {
+        std::ifstream ifs("tmp_fname.txt", std::ios::in);
+        std::getline(ifs,dir_name);
+        files = get_file_names(dir_name);
+        if(files.size() > 0)
+          mmat = cv::imread(files[i]);
+        sid = dir_name;
+      }
+      else
+        sid = "Empty_dir";
+    }
+
+   nodo_iter_dir(cv::Point c, int r, std::string path):
+    nodo(c,r)
+    {
+        files = get_file_names(path);
+        if(files.size() > 0)
+        {
+          mmat = cv::imread(files[i]);
+          sid = dir_name;
+        }
+        else
+          sid = "Empty_dir";
+    }
+
+    void procesar() override { };
+
+    virtual void actuar() override {
+      b_mostrar=true; 
+      ++i; 
+      if(i > files.size())
+        i=0;
+      mmat = cv::imread(files[i]);
+      for(auto n : suscriptores)
+        n->msrc = mmat;
+  }
+
+  std::vector<std::string> files;
+  std::string dir_name;
+  int i{0};
 };
 
 struct nodo_video : nodo
@@ -330,7 +386,12 @@ struct nodo_dnn : nodo
     }
   virtual void procesar() override;
   virtual void desactivar() override { b_mostrar = false; }
+  cv::Mat forward_prop();
+  std::vector<std::pair<float,cv::Rect>> extract_detections(cv::Mat& fw);
   cv::dnn::Net net;
+  const float DETECTION_THRESHOLD{0.9};
+  std::vector<dlib::matrix<float,0,1>> embeddings;
+  std::vector<cv::Mat> mis_caras;
 };
 
 struct nodo_caffe : nodo
