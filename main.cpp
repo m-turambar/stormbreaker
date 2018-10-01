@@ -16,12 +16,12 @@ using namespace cv;
 int main(int argc, char** argv)
 {
     /* Requerimos que el usuario introduzca el path a los modelos*/
-    if(argc < 2)
+    /*if(argc < 2)
     {
         std::cout << "Uso:\n\t"
                   << "stormbreaker path/to/model/\n";
                   return -1;
-    }
+    }*/
     mj mjol;
     init_dlib_mk();
     mjol.test_init(); //definido en nodo.cpp, usado para pruebas
@@ -33,5 +33,6 @@ int main(int argc, char** argv)
     //cout << " hecho.\n";
     
     //mjol.run();
+    void clean_exit_dlib();
     return 0;
 }

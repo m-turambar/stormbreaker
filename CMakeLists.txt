@@ -11,7 +11,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories(include /usr/local/include/google/tensorflow)
+#include_directories(include /usr/local/include/google/tensorflow)
+include_directories(include /usr/local/include)
 
 # Add executable called "stormbreaker" that is built from the source files
 # "main.cpp" and "*.cxx". The extensions are automatically found.
@@ -19,7 +20,7 @@ add_executable (stormbreaker
     main.cpp
     src/mj.cpp
     src/node.cpp
-    src/tensor_mk.cpp
+    #src/tensor_mk.cpp
     src/caffe_mk.cpp
     src/dlib_mk.cpp
     src/resnet.cpp
@@ -36,6 +37,7 @@ target_include_directories (stormbreaker PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # Link the executable to the Hello library. Since the Hello library has
 # public include directories we will use those link directories when building
 # helloDemo
-target_link_libraries (stormbreaker ${OpenCV_LIBS} tensorflow_cc tensorflow_framework dlib::dlib caffe protobuf glog boost_system stdc++fs)
+#target_link_libraries (stormbreaker ${OpenCV_LIBS} tensorflow_cc tensorflow_framework dlib::dlib caffe protobuf glog boost_system stdc++fs)
+target_link_libraries (stormbreaker ${OpenCV_LIBS} dlib::dlib caffe protobuf glog boost_system stdc++fs)
 
 

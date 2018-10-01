@@ -353,7 +353,7 @@ void generar_red_piel()
 
 void mj::test_init()
 {
-  auto n_iter = std::make_unique<nodo_iter_dir>(cv::Point(500,500), 500, "/home/mike/proyectos/caras/conocidos");
+  auto n_iter = std::make_unique<nodo_iter_dir>(cv::Point(500,500), 500, "/home/mike/data/face_data");
   //mj::nodos.emplace_back(std::move(n_iter));
   auto dnn_mk = std::make_unique<nodo_dnn>(cv::Point(1500,500), 500);
   dnn_mk->suscribir_a(n_iter.get());
@@ -372,9 +372,6 @@ void mj::test_init()
   for (size_t i = 0; i < embeddings.size(); ++i)
   {
     cout << "cara " << i << ":\n";
-    for(auto f : embeddings[i])
-      cout << f << " ";
-    cout << endl;
 
     for (size_t j = i; j < embeddings.size(); ++j)
     {
@@ -384,7 +381,7 @@ void mj::test_init()
         // certainly use any other threshold you find useful.
         auto len = dlib::length(embeddings[i]-embeddings[j]);
         cout << "distancia entre cara " << i << " y cara " << j << " es " << len << endl;
-        if (len < 0.49)
+        if (len < 0.51)
             edges.push_back(dlib::sample_pair(i,j));
     }
   }

@@ -29,6 +29,11 @@ int init_dlib_mk()
     return 0;
 }
 
+void clean_exit_dlib()
+{
+    
+}
+
 /*crop is expected to be a face only*/
 matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop)
 {

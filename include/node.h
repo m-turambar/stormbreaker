@@ -381,15 +381,15 @@ struct nodo_dnn : nodo
     {
       mcolor = cv::Scalar(123,123,60);
       sid = "DNN" + sid;
-      net = cv::dnn::readNetFromCaffe("/home/mike/src/deep-learning-face-detection/deploy.prototxt", 
-                                      "/home/mike/src/deep-learning-face-detection/res10_300x300_ssd_iter_140000.caffemodel");
+      net = cv::dnn::readNetFromCaffe("/home/mike/data/deteccion_cara.prototxt", 
+                                      "/home/mike/data/res10_300x300_ssd_iter_140000.caffemodel");
     }
   virtual void procesar() override;
   virtual void desactivar() override { b_mostrar = false; }
   cv::Mat forward_prop();
   std::vector<std::pair<float,cv::Rect>> extract_detections(cv::Mat& fw);
   cv::dnn::Net net;
-  const float DETECTION_THRESHOLD{0.9};
+  const float DETECTION_THRESHOLD{0.90};
   std::vector<dlib::matrix<float,0,1>> embeddings;
   std::vector<cv::Mat> mis_caras;
 };

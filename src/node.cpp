@@ -137,29 +137,30 @@ void nodo::make_mmat_squared()
 }
 
 void nodo_dnn::procesar()
+{
+  if( !msrc.empty() )
   {
-    if( !msrc.empty() )
+    make_mmat_squared();
+    cv::Mat fw = forward_prop();
+    auto detecciones = extract_detections(fw);
+    //cv::imshow("face",mmat);
+    //waitKey(0);
+
+    for(auto par_p_rect : detecciones) //por cada deteccion...
     {
-      make_mmat_squared();
-      cv::Mat fw = forward_prop();
-      auto detecciones = extract_detections(fw);
-      //cv::imshow("face",mmat);
-      //waitKey(0);
+      cout << "Precision de la deteccion: " << par_p_rect.first << "%\n";
+      cv::rectangle(mmat, par_p_rect.second, cv::Scalar(20,20,230), 1, 8, 0);
+      Mat cara = mmat(par_p_rect.second);
+      dlib::matrix<float,0,1> embedding = alinear_y_reconocer_cara(cara);
 
-      for(auto par_p_rect : detecciones) //por cada deteccion...
-      {
-        cv::rectangle(mmat, par_p_rect.second, cv::Scalar(20,20,230), 1, 8, 0);
-        Mat cara = mmat(par_p_rect.second);
-        dlib::matrix<float,0,1> embedding = alinear_y_reconocer_cara(cara);
-
-        /**************/
-        mis_caras.push_back(cara);
-        /**************/
-        embeddings.push_back(std::move(embedding));
-      }
-      
+      /**************/
+      mis_caras.push_back(cara);
+      /**************/
+      embeddings.push_back(std::move(embedding));
     }
+    
   }
+}
 
 cv::Mat nodo_dnn::forward_prop()
 {
@@ -187,14 +188,18 @@ std::vector<std::pair<float,cv::Rect>> nodo_dnn::extract_detections(cv::Mat& fw)
       int yi = fw.at<cv::Vec3f>(0,0)[i+2]*mmat.cols;
       int xf = fw.at<cv::Vec3f>(0,0)[i+3]*mmat.rows;
       int yf = fw.at<cv::Vec3f>(0,0)[i+4]*mmat.cols;
-
+      if(xi > mmat.rows || yi > mmat.cols)
+        break;
+      cout << "{" << xi << ", " << yi << "} {" << xf << ", " << yf << "}pre\n";
       /*We correct against the bounding box going out of picture*/
       xi = xi < 0 ? 0 : xi;
       yi = yi < 0 ? 0 : yi;
       xf = xf > mmat.rows ? mmat.rows : xf;
       yf = yf > mmat.cols ? mmat.cols : yf;
-      //cout << "{" << xi << ", " << xf << "} {" << yi << ", " << yf << "}\n";
+      cout << "{" << xi << ", " << yi << "} {" << xf << ", " << yf << "}\n";
       ret.push_back( std::make_pair(proba, cv::Rect(xi,yi,xf-xi,yf-yi)) );
+      //remove this break if you want more than one isntance
+      break;
     }
     return ret;
 }

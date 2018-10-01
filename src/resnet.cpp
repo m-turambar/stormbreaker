@@ -49,18 +49,22 @@ using anet_type = loss_metric<fc_no_bias<128,avg_pool_everything<
                             input_rgb_image_sized<150>
                             >>>>>>>>>>>>;
 
-
-anet_type red;
+/* We don't have a guarantee of the order of initialization/destructor of statically
+   allocated objects. Hence we must rely on a manual construction/destruction of these
+   CUDA dependent objects to avoid undefined behavior. Destructor cleanup calls performed by CUDA
+   were failing due to this*/
+anet_type* red;
 
 int deserialize_resnet()
 {
-    deserialize("/home/mike/data/dlib_face_recognition_resnet_model_v1.dat") >> red;
+    red = new anet_type;
+    deserialize("/home/mike/data/dlib_face_recognition_resnet_model_v1.dat") >> (*red);
     return 0;
 }
 
 //es un vector con un solo elemento, pero no se podía de otra forma
 std::vector<dlib::matrix<float,0,1>> get_face_features(std::vector<matrix<rgb_pixel> >cara)
 {
-    auto descriptores = red(cara);
+    auto descriptores = (*red)(cara);
     return descriptores;
 }

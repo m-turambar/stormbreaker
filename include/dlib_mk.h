@@ -12,6 +12,7 @@
 #include <dlib/pixel.h>
 
 int init_dlib_mk();
+void clean_exit_dlib();
 dlib::matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop);
 
 int deserialize_resnet();
