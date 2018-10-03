@@ -58,6 +58,36 @@ Classifier::Classifier(const string& model_file, const string& trained_file, con
        << "mean = " << mean.size << " " << mean.channels() << endl;
 }
 
+Classifier::Classifier(const string& model_file, const string& trained_file) 
+{
+  Caffe::set_mode(Caffe::GPU);
+
+  /* Load the network. */
+  net.reset(new Net<float>(model_file, TEST)); /* TEST es un enum de caffe.pb.h donde */
+  net->CopyTrainedLayersFrom(trained_file);
+
+  CHECK_EQ(net->num_inputs(), 1) << "Network should have exactly one input.";
+  CHECK_EQ(net->num_outputs(), 1) << "Network should have exactly one output.";
+
+  Blob<float>* input_layer = net->input_blobs()[0];
+  num_channels = input_layer->channels();
+
+  CHECK(num_channels == 3 || num_channels == 1) << "Input layer should have 1 or 3 channels.";
+
+  input_geometry = cv::Size(input_layer->width(), input_layer->height());
+  std::cout << "estableciendo promedio...\n";
+
+  //mean{promedio};
+  mean = cv::Scalar(104, 177, 123);
+
+
+  Blob<float>* output_layer = net->output_blobs()[0];
+  cout << "Classifier ctor: \n"
+       << "model_file = " << model_file << endl
+       << "trained_file = " << trained_file << endl
+       << "input_geometry = " << input_geometry << endl
+       << "mean = " << mean.size << " " << mean.channels() << endl;
+}
 
 /* Return the indices of the top N values of vector v. */
 static std::vector<int> Argmax(const std::vector<float>& v, int N) 
@@ -207,21 +237,11 @@ void Classifier::preprocess(const Mat& img, std::vector<Mat>* input_channels)
     << "Input channels are not wrapping the input layer of the network.";
 }
 
-int cargar_modelo(int argc, char** argv) {
-  if (argc != 5) {
-    std::cerr << "Uso: " << argv[0]
-              << " deploy.prototxt network.caffemodel"
-              << " mean.binaryproto labels.txt" << std::endl;
-    return 1;
-  }
+int cargar_modelo(string model_file, string trained_file, string mean_file, string label_file) {
 
   //investiga: qué hace Google Logging
-  ::google::InitGoogleLogging(argv[0]);
+  //::google::InitGoogleLogging(argv[0]);
 
-  string model_file   = argv[1];
-  string trained_file = argv[2];
-  string mean_file    = argv[3];
-  string label_file   = argv[4];
   mClassifier = make_unique<Classifier>(model_file, trained_file, mean_file, label_file);
  
   return 0;

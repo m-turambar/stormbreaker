@@ -11,11 +11,7 @@
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/pixel.h>
 
-int init_dlib_mk();
 void clean_exit_dlib();
 dlib::matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop);
-
-int deserialize_resnet();
-std::vector<dlib::matrix<float,0,1>> get_face_features(std::vector<dlib::matrix<dlib::rgb_pixel> >cara);
 
 #endif

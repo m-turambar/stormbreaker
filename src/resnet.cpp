@@ -53,18 +53,26 @@ using anet_type = loss_metric<fc_no_bias<128,avg_pool_everything<
    allocated objects. Hence we must rely on a manual construction/destruction of these
    CUDA dependent objects to avoid undefined behavior. Destructor cleanup calls performed by CUDA
    were failing due to this*/
-anet_type* red;
+static anet_type* red;
 
 int deserialize_resnet()
 {
     red = new anet_type;
+    cout << "hecho.\nDeserializando modelo para resnet... ";
     deserialize("/home/mike/data/dlib_face_recognition_resnet_model_v1.dat") >> (*red);
+    cout << "hecho.\n";
     return 0;
 }
 
 //es un vector con un solo elemento, pero no se podía de otra forma
 std::vector<dlib::matrix<float,0,1>> get_face_features(std::vector<matrix<rgb_pixel> >cara)
 {
+    static bool is_deserialized{false};
+    if(!is_deserialized)
+    {
+        deserialize_resnet();
+        is_deserialized = true;
+    }
     auto descriptores = (*red)(cara);
     return descriptores;
 }

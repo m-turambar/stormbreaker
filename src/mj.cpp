@@ -1,7 +1,10 @@
 #include <memory>
 #include "mj.h"
-#include "node.h"
 #include "dlib_mk.h"
+#include "input_nodes.h"
+#include "processing_nodes.h"
+#include "deep_nodes.h"
+#include "nodo_cara.h"
 
 using namespace std;
 using namespace cv;
@@ -32,8 +35,8 @@ std::vector<std::unique_ptr<nodo>> mj::nodos;
 
 nodo* ptr_ultimo{nullptr};
 
-template<typename Tipo_Nodo>
-nodo* crear_nodo();
+template<typename Tipo_Nodo, typename... Args>
+nodo* crear_nodo(Args... args);
 
 nodo* determinar_propiedades_ubicacion(cv::Point p);
 nodo* encontrar_ptr_area(cv::Point& p);
@@ -47,7 +50,8 @@ void cb_mouse_static(int event, int x, int y, int flags, void* data)
 
 mj::mj()
 {
-  namedWindow(wname);
+  namedWindow(wname, cv::WINDOW_GUI_NORMAL | WINDOW_AUTOSIZE);
+  createButton("button2",[](int state, void* userdata) {},NULL,QT_CHECKBOX,0);
   diagrama = Mat(400,600,CV_8UC3, bckgnd);
   setMouseCallback(wname,cb_mouse_static,this);
 }
@@ -77,8 +81,6 @@ void mj::run()
 
     if(b_dibujando_flecha) //dibujamos una flecha temporal
       arrowedLine(diagrama, transformar(pt_inicio), transformar(pt_termino), COLOR_BLANCO, 2, LINE_AA);
-
-
 
     imshow(wname,diagrama);
   }
@@ -126,7 +128,7 @@ void mj::cb_teclado(char k)
     ptr_ultimo = crear_nodo<nodo_erosion_dilacion>();
     break;
   case 'f':
-    ptr_ultimo = crear_nodo<nodo_filtro_bilateral>();
+    ptr_ultimo = crear_nodo<nodo_caffe>("/home/mike/data/ssd_face_deploy.prototxt.txt", "/home/mike/data/best_bn_full.caffemodel");
     break;
   case 'g':
     ptr_ultimo = crear_nodo<nodo_gris>();
@@ -290,8 +292,8 @@ nodo* determinar_propiedades_ubicacion(cv::Point p)
   return (ptr_highlight = ptr); //actualizamos la llave highlight
 }
 
-template<typename Tipo_Nodo>
-nodo* crear_nodo()
+template<typename Tipo_Nodo, typename... Args>
+nodo* crear_nodo(Args... args)
 {
   b_dibujando_objeto = true;
   pt_termino = (pt_inicio = transformacion_inversa(puntoActualMouse));
@@ -301,7 +303,7 @@ nodo* crear_nodo()
 
   Point hipot = pt_termino - pt_inicio;
   int radio = hypot(hipot.x, hipot.y);
-  unique_ptr<Tipo_Nodo> uptr = std::make_unique<Tipo_Nodo>(pt_inicio, radio);
+  unique_ptr<Tipo_Nodo> uptr = std::make_unique<Tipo_Nodo>(pt_inicio, radio, args...);
   nodo* ptr_ult = uptr.get();
   mj::nodos.emplace_back(std::move(uptr));
   ptr_highlight=ptr_seleccionado=nullptr;
@@ -353,7 +355,7 @@ void generar_red_piel()
 
 void mj::test_init()
 {
-  auto n_iter = std::make_unique<nodo_iter_dir>(cv::Point(500,500), 500, "/home/mike/data/face_data");
+  auto n_iter = std::make_unique<nodo_iter_dir>(cv::Point(500,500), 500, "/home/mike/proyectos/caras/sw_team");
   //mj::nodos.emplace_back(std::move(n_iter));
   auto dnn_mk = std::make_unique<nodo_dnn>(cv::Point(1500,500), 500);
   dnn_mk->suscribir_a(n_iter.get());
@@ -372,6 +374,9 @@ void mj::test_init()
   for (size_t i = 0; i < embeddings.size(); ++i)
   {
     cout << "cara " << i << ":\n";
+    for(auto f : embeddings[i])
+      cout << f << " ";
+    cout << endl;
 
     for (size_t j = i; j < embeddings.size(); ++j)
     {
@@ -381,7 +386,7 @@ void mj::test_init()
         // certainly use any other threshold you find useful.
         auto len = dlib::length(embeddings[i]-embeddings[j]);
         cout << "distancia entre cara " << i << " y cara " << j << " es " << len << endl;
-        if (len < 0.51)
+        if (len < 0.49)
             edges.push_back(dlib::sample_pair(i,j));
     }
   }

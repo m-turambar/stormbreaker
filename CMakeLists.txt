@@ -5,6 +5,7 @@ cmake_minimum_required (VERSION 3.5)
 project (Stormbreaker)
 
 find_package(OpenCV REQUIRED)
+find_package(Protobuf 3.6.0 REQUIRED )
 find_package(dlib REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -19,13 +20,22 @@ include_directories(include /usr/local/include)
 add_executable (stormbreaker
     main.cpp
     src/mj.cpp
+    
     src/node.cpp
+    src/input_nodes.cpp
+    src/processing_nodes.cpp
+    src/deep_nodes.cpp
+    src/nodo_cara.cpp
+    
     #src/tensor_mk.cpp
     src/caffe_mk.cpp
     src/dlib_mk.cpp
+    
+    src/dlib_cnn_face_detector.cpp
     src/resnet.cpp
+    src/clusters.cpp
+    
     src/sistema_archivos.cpp)
-
 # Make sure the compiler can find include files for our Hello library
 # when other libraries or executables link to Hello
 target_include_directories (stormbreaker PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -38,6 +48,6 @@ target_include_directories (stormbreaker PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # public include directories we will use those link directories when building
 # helloDemo
 #target_link_libraries (stormbreaker ${OpenCV_LIBS} tensorflow_cc tensorflow_framework dlib::dlib caffe protobuf glog boost_system stdc++fs)
-target_link_libraries (stormbreaker ${OpenCV_LIBS} dlib::dlib caffe protobuf glog boost_system stdc++fs)
+target_link_libraries (stormbreaker ${OpenCV_LIBS} protobuf caffe dlib::dlib glog boost_system stdc++fs)
 
 

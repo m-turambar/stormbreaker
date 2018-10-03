@@ -16,7 +16,10 @@ struct Classifier
              const std::string& mean_file,
              const std::string& label_file);
 
-  std::vector<Prediction> Classify(const cv::Mat& img, int N = 5);
+  Classifier(const std::string& model_file,
+             const std::string& trained_file);
+
+  std::vector<Prediction> Classify(const cv::Mat& img, int N = 3);
   std::vector<float> Predict(const cv::Mat& img);
 
   void set_mean(const std::string& mean_file);

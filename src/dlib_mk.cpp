@@ -1,4 +1,5 @@
 #include "dlib_mk.h"
+#include "resnet.h"
 #include <dlib/image_processing.h>
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/gui_widgets.h>
@@ -19,13 +20,11 @@ using namespace cv;
 shape_predictor sp;
 image_window win, win_aligned;
 
-int init_dlib_mk()
+int deserializar_landmarks()
 {
     cout << "Deserializando modelo para face landmarks... ";
     deserialize("/home/mike/data/shape_predictor_68_face_landmarks.dat") >> sp;
-    cout << "hecho.\nDeserializando modelo para resnet... ";
-    deserialize_resnet();
-    cout << "hecho.\n";
+
     return 0;
 }
 
@@ -37,6 +36,12 @@ void clean_exit_dlib()
 /*crop is expected to be a face only*/
 matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop)
 {
+    static bool landmarks_deserializados{false};
+    if(!landmarks_deserializados)
+    {
+        deserializar_landmarks();
+        landmarks_deserializados = true;
+    }
     Mat crop_rgb;
     cv::cvtColor(crop, crop_rgb, cv::COLOR_BGR2RGB);
 
