@@ -19,7 +19,7 @@ using namespace cv;
 // This is the tool that will predict face
 // landmark positions given an image and a face bounding box
 shape_predictor sp;
-image_window win, win_aligned;
+//image_window win, win_aligned;
 
 int deserializar_landmarks()
 {

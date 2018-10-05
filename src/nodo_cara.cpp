@@ -90,7 +90,7 @@ struct detector_facial
         subsecuentes valores. La matriz ya regresa sorteada, no sé porqué cada entrada
         tiene 7 valores extra de profundidad, pero no los estoy usando. */
 
-        float DETECTION_THRESHOLD{0.8};
+        float DETECTION_THRESHOLD{0.7};
         std::vector<std::pair<float, cv::Rect>> ret;
         for (int i = 2;; i += 7)
         {
@@ -120,6 +120,9 @@ struct detector_facial
             //remove this break if you want more than one isntance. super awesome comment
             //break;
         }
+        for(int i=2; i<=22; i+=7)
+            cout << tensorDeteccion.at<cv::Vec3f>(0, 0)[i] << " ";
+        cout << endl;
         return ret;
     }
 
@@ -130,7 +133,8 @@ detector_facial gDetectorFacial;
 std::vector<dlib::matrix<float,0,1>> gEmbeddings;
 std::vector<dlib::sample_pair> gEdges;
 std::vector<unsigned long> gLabels;
-std::vector<std::string> gLabelVector = {"Rommel","Leo","Kuri","Gibran","Pegueros","Abraham","Praneesh","Ian","Mike","Tintor","Diez","Once"};
+std::vector<std::string> gLabelVector = {"Tintor","Rommel","Leo","Kuri","Gibran","Pegueros","Abraham",
+                                        "Praneesh","Ian","Mike","Luis","Luis","Nallely","Unknown1", "Unknown2","Unknown3","Unknown4"};
 
 void populate_and_cluster()
 {
