@@ -119,19 +119,21 @@ void nodo::info()
     cout << "\t" << cl->sid << '\n';
 }
 
-void nodo::make_mmat_squared()
+cv::Mat make_mat_squared(cv::Mat& img)
 {
-  int dx = (msrc.cols - msrc.rows)/2;
+  cv::Mat img_sq;
+  int dx = (img.cols - img.rows)/2;
   if(dx < 0)
   {
-    dx = (msrc.rows - msrc.cols)/2;
-    mmat = msrc.rowRange(dx, msrc.rows - dx);
+    dx = (img.rows - img.cols)/2;
+    img_sq = img.rowRange(dx, img.rows - dx);
   }
   else
   {
-    mmat = msrc.colRange(dx, msrc.cols - dx);
+    img_sq = img.colRange(dx, img.cols - dx);
   }
-  cv::resize(mmat, mmat, cv::Size(300,300) );
+  cv::resize(img_sq, img_sq, cv::Size(300,300) );
+  return img_sq;
 }
 
 

@@ -11,15 +11,19 @@ Face data is a 128-d<float> vector
 namespace mk
 {
 
-cluster::cluster()
-{
+int cluster::sid{0};
 
+cluster::cluster(std::array<float,128>& embedding )
+{
+    centroid = embedding;
+    label = std::to_string(sid);
+    ++sid;
 }
 
 void cluster::agregar_punto(std::array<float,128>& new_point)
 {
-    const int N = data.size();
-    data.push_back(new_point);
+    //const int N = data.size();
+    //data.push_back(new_point);
     //averigua como paralelizar esto
     for(int i=0; i<128; ++i)
     {
@@ -28,12 +32,17 @@ void cluster::agregar_punto(std::array<float,128>& new_point)
     }
 }
 
-float cluster::operator-(cluster& other)
+float cluster::operator-(std::array<float,128>& other)
 {
     float dif = 0;
     for(int i = 0; i<128; ++i)
-        dif += std::pow(centroid[i] - other.centroid[i], 2);
+        dif += std::pow(centroid[i] - other[i], 2);
     return dif;
+}
+
+void cluster::log(std::array<float,128>& point)
+{
+
 }
 
 

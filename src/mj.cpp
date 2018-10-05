@@ -128,7 +128,8 @@ void mj::cb_teclado(char k)
     ptr_ultimo = crear_nodo<nodo_erosion_dilacion>();
     break;
   case 'f':
-    ptr_ultimo = crear_nodo<nodo_caffe>("/home/mike/data/ssd_face_deploy.prototxt.txt", "/home/mike/data/best_bn_full.caffemodel");
+    ptr_ultimo = crear_nodo<nodo_cara>();
+    //ptr_ultimo = crear_nodo<nodo_caffe>("/home/mike/data/ssd_face_deploy.prototxt.txt", "/home/mike/data/best_bn_full.caffemodel");
     break;
   case 'g':
     ptr_ultimo = crear_nodo<nodo_gris>();
@@ -155,7 +156,7 @@ void mj::cb_teclado(char k)
     exit=true;
     break;
   case 'r':
-    ptr_ultimo = crear_nodo<nodo_dnn>();
+    ptr_ultimo = crear_nodo<nodo_cara>();
     break;
   case 's':
     ptr_ultimo = crear_nodo<nodo_hough_circulo>();
@@ -353,68 +354,3 @@ void generar_red_piel()
   nbwand->suscribir_a(nblur);
 }
 
-void mj::test_init()
-{
-  auto n_iter = std::make_unique<nodo_iter_dir>(cv::Point(500,500), 500, "/home/mike/proyectos/caras/sw_team");
-  //mj::nodos.emplace_back(std::move(n_iter));
-  auto dnn_mk = std::make_unique<nodo_dnn>(cv::Point(1500,500), 500);
-  dnn_mk->suscribir_a(n_iter.get());
-  std::vector<dlib::matrix<dlib::rgb_pixel>> faces;
-  for(auto s : n_iter->files)
-  {
-    std::cout << "leyendo " << s << std::endl;
-    dnn_mk->msrc = imread(s);
-    dnn_mk->procesar();
-  }
-  cout << "procesamos " << dnn_mk->embeddings.size() << " caras.\n";
-
-  vector<dlib::matrix<float,0,1>>& embeddings = dnn_mk->embeddings;
-
-  std::vector<dlib::sample_pair> edges;
-  for (size_t i = 0; i < embeddings.size(); ++i)
-  {
-    cout << "cara " << i << ":\n";
-    for(auto f : embeddings[i])
-      cout << f << " ";
-    cout << endl;
-
-    for (size_t j = i; j < embeddings.size(); ++j)
-    {
-        // Faces are connected in the graph if they are close enough.  Here we check if
-        // the distance between two face descriptors is less than 0.6, which is the
-        // decision threshold the network was trained to use.  Although you can
-        // certainly use any other threshold you find useful.
-        auto len = dlib::length(embeddings[i]-embeddings[j]);
-        cout << "distancia entre cara " << i << " y cara " << j << " es " << len << endl;
-        if (len < 0.49)
-            edges.push_back(dlib::sample_pair(i,j));
-    }
-  }
-  std::vector<unsigned long> labels;
-  const auto num_clusters = dlib::chinese_whispers(edges, labels);
-  cout << "num clusters = " << num_clusters << endl;
-
-    // Now let's display the face clustering results on the screen.  You will see that it
-  // correctly grouped all the faces. 
-  std::vector<dlib::image_window> win_clusters(num_clusters);
-  for (size_t cluster_id = 0; cluster_id < num_clusters; ++cluster_id)
-  {
-      std::vector<dlib::matrix<dlib::bgr_pixel>> temp;
-      for (size_t j = 0; j < labels.size(); ++j)
-      {
-          if (cluster_id == labels[j])
-          {
-            dlib::cv_image<dlib::bgr_pixel> image(dnn_mk->mis_caras[j]);
-            dlib::matrix<dlib::bgr_pixel> matddd;
-            assign_image(matddd, image);
-            temp.push_back(matddd);
-          }
-              
-      }
-      win_clusters[cluster_id].set_title("face cluster " + dlib::cast_to_string(cluster_id));
-      win_clusters[cluster_id].set_image(tile_images(temp));
-  }
-  cout << "hit enter to terminate" << endl;
-  cin.get();
-
-}

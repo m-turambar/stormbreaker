@@ -37,7 +37,6 @@ struct nodo
 
   virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid/*, cv::WINDOW_GUI_EXPANDED*/); cv::imshow(sid,mmat); } }
   virtual void desactivar() { b_mostrar = false; /*cv::destroyWindow(sid);*/ }
-  void make_mmat_squared();
   virtual ~nodo();
 
   std::vector<nodo*> proveedores;
@@ -54,6 +53,6 @@ struct nodo
   cv::Mat msrc; //ocupada solo por nodos que tengan input
 };
 
-
+cv::Mat make_mat_squared(cv::Mat& img);
 
 #endif // NODE_H

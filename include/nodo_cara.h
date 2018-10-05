@@ -11,17 +11,10 @@
 #include <dlib/pixel.h>
 
 /*este es el nodo que actualmente usamos*/
-struct nodo_dnn : nodo
+struct nodo_cara : nodo
 {
-  nodo_dnn(cv::Point c, int r);
+  nodo_cara(cv::Point c, int r);
   virtual void procesar() override;
-  cv::Mat forward_prop();
-  std::vector<std::pair<float,cv::Rect>> extract_detections(cv::Mat& fw);
-
-  const float DETECTION_THRESHOLD{0.90};
-  std::vector<dlib::matrix<float,0,1>> embeddings;
-  std::vector<cv::Mat> mis_caras;
-  cv::dnn::Net net;
 };
 
 #endif

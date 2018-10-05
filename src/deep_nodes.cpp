@@ -22,7 +22,7 @@ void nodo_caffe::procesar()
 {
     if (!msrc.empty())
     {
-        make_mmat_squared();
+        mmat = make_mat_squared(mmat);
         //get_bboxes(mmat);
         //predecir_etiquetas(msrc);
     }

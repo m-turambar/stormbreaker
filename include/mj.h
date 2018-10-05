@@ -14,10 +14,9 @@ struct mj
   void cb_teclado(char k);
   void cb_mouse(int event, int x, int y, int flags);
   void run();
-  void test_init();
 
   static cv::Mat diagrama;
-  const cv::Scalar bckgnd{cv::Scalar(153,25,130)};
+  const cv::Scalar bckgnd{cv::Scalar(153,125,130)};
   bool exit{false};
   const std::string wname = "sbreaker";
   static cv::Point dxy;
