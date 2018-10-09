@@ -1,20 +1,17 @@
 #include <iostream>
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/videoio.hpp>
-#include <opencv2/dnn.hpp>
 #include "mj.h"
-#include "node.h"
-#include "tensor_mk.hpp"
-#include "caffe_mk.h"
-#include "dlib_mk.h"
-
+//#include "tensor_mk.hpp"
+//#include "caffe_mk.h"
+//#include "dlib_mk.h"
 
 using namespace std;
 using namespace cv;
 
 int main(int argc, char** argv)
 {
+
+
+    
     mj mjol;
 
     //mjol.test_init(); //definido en nodo.cpp, usado para pruebas

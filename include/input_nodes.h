@@ -1,7 +1,7 @@
 #ifndef MK_INPUT_NODES
 #define MK_INPUT_NODES
 
-#include "node.h"
+#include "nodo.h"
 
 struct nodo_im : nodo
 {

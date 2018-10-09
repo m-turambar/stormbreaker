@@ -1,7 +1,7 @@
 #ifndef MK_PROCESSING_NODES
 #define MK_PROCESSING_NODES
 
-#include "node.h"
+#include "nodo.h"
 #include <opencv2/highgui.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>

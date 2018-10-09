@@ -34,6 +34,6 @@ void nodo_caffe::actuar()
     if (!msrc.empty())
     {
         mmat = msrc;
-        predecir_etiquetas(mmat);
+        //predecir_etiquetas(mmat);
     }
 }

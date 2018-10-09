@@ -6,7 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/videoio.hpp>
-#include "node.h"
+#include "nodo.h"
 
 struct mj
 {

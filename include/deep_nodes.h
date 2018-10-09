@@ -1,7 +1,7 @@
 #ifndef MK_DEEP_NODES
 #define MK_DEEP_NODES
 
-#include "node.h"
+#include "nodo.h"
 #include "caffe_mk.h"
 
 /*actualmente inutilizado. modificar ctor y ::procesar*/
