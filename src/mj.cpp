@@ -3,7 +3,9 @@
 #include "dlib_mk.h"
 #include "input_nodes.h"
 #include "processing_nodes.h"
+#ifndef _WIN32
 #include "deep_nodes.h"
+#endif //_WIN32
 #include "nodo_cara.h"
 
 using namespace std;
@@ -147,7 +149,7 @@ void mj::cb_teclado(char k)
     ptr_ultimo = crear_nodo<nodo_laplace>();
     break;
   case 'm':
-    ptr_ultimo = crear_nodo<nodo_caffe>();
+    //ptr_ultimo = crear_nodo<nodo_caffe>();
     break;
   case 'p': //piel
     ptr_ultimo = crear_nodo<nodo_mascara>();

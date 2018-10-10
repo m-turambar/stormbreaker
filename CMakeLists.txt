@@ -4,6 +4,7 @@
 cmake_minimum_required (VERSION 3.5)
 project (Stormbreaker)
 
+find_package(Boost 1.58 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Protobuf 3.6.0 REQUIRED )
 find_package(dlib REQUIRED)
@@ -15,6 +16,12 @@ set(CMAKE_CXX_FLAGS "-O2 -Wall -DNDEBUG")
 
 #include_directories(include /usr/local/include/google/tensorflow)
 include_directories(include /usr/local/include)
+
+IF (WIN32)
+  # 
+ELSE()
+  # set stuff for other systems
+ENDIF()
 
 add_library(ml
     src/resnet.cpp
@@ -29,7 +36,7 @@ add_library(mjolnir
     src/nodo.cpp
     src/input_nodes.cpp
     src/processing_nodes.cpp
-    src/deep_nodes.cpp
+    #src/deep_nodes.cpp
     src/nodo_cara.cpp
 )
 
@@ -45,6 +52,12 @@ add_executable(organizar
     utils/organizar.cpp
     utils/sistema_archivos.cpp
 )
+
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(stormbreaker ${Boost_LIBRARIES})
+    target_link_libraries(organizar ${Boost_LIBRARIES})
+endif()
 
 target_include_directories (ml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories (mjolnir PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
