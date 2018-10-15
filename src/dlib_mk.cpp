@@ -24,7 +24,7 @@ shape_predictor sp;
 int deserializar_landmarks()
 {
     cout << "Deserializando modelo para face landmarks... ";
-    deserialize("/home/mike/data/shape_predictor_68_face_landmarks.dat") >> sp;
+    deserialize("./data/shape_predictor_68_face_landmarks.dat") >> sp;
 
     return 0;
 }
@@ -57,7 +57,6 @@ matrix<float,0,1> alinear_y_reconocer_cara(cv::Mat& crop)
     //win_aligned.set_image(caras[0]);
     
     std::vector<matrix<float,0,1>> fds = get_face_features(caras);
-    std::array<float,128> embedding;
     //std::copy(fds[0].begin(), fds[0].end(), embedding.begin());
     //return embedding;
     return fds[0];

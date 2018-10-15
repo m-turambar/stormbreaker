@@ -22,8 +22,8 @@ std::vector<std::string> gLabelVector = {"Tintor","Rommel","Leo","Kuri","Gibran"
 
 detector_facial::detector_facial()
 {
-    net = cv::dnn::readNetFromCaffe("/home/mike/data/deteccion_cara.prototxt",
-                                    "/home/mike/data/res10_300x300_ssd_iter_140000.caffemodel");
+    net = cv::dnn::readNetFromCaffe("./data/deteccion_cara.prototxt",
+                                    "./data/res10_300x300_ssd_iter_140000.caffemodel");
 }
 
 /*Genera un tensor donde viene información sobre los bounding boxes y la probabilidad de que estos sean el objeto que se busca*/
@@ -102,10 +102,10 @@ std::vector<std::pair<float, cv::Rect>> detector_facial::detectar_caras(cv::Mat 
         if (proba < DETECTION_THRESHOLD)
             break;
 
-        int xi = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 1] * h;
-        int yi = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 2] * w;
-        int xf = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 3] * h;
-        int yf = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 4] * w;
+        uint xi = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 1] * h;
+        uint yi = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 2] * w;
+        uint xf = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 3] * h;
+        uint yf = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 4] * w;
 
         /*entender esto*/
         if (xi > h || yi > w)
@@ -132,7 +132,7 @@ std::vector<std::pair<float, cv::Rect>> detector_facial::detectar_caras(cv::Mat 
 
 void populate_and_cluster()
 {
-  nodo_iter_dir mNodoIteradorDirectorios(cv::Point(500,500), 500, "/home/mike/proyectos/stormbreaker/sw_team");
+  nodo_iter_dir mNodoIteradorDirectorios(cv::Point(500,500), 500, "./sw_team");
   for(auto s : mNodoIteradorDirectorios.files)
   {
     std::cout << "leyendo " << s << std::endl;

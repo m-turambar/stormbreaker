@@ -30,7 +30,11 @@ struct nodo_video : nodo
     nodo(c,r)
     {
       sid = "Video" + sid;
+      #ifdef _WIN32
+      cap.open(0);
+      #else
       cap.open("/dev/video0");
+      #endif
     }
   virtual ~nodo_video() {}
   cv::VideoCapture cap;

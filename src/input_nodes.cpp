@@ -6,7 +6,7 @@ using namespace std;
 nodo_im::nodo_im(cv::Point c, int r):
     nodo(c,r)
 {
-    int retorno = system("python3 /home/mike/proyectos/stormbreaker/scripts/file_dialog.py > tmp_fname.txt");
+    int retorno = system("python3 ./scripts/file_dialog.py > tmp_fname.txt");
     if(retorno==0) {
     std::ifstream ifs("tmp_fname.txt", std::ios::in);
     std::string fname;
@@ -23,7 +23,7 @@ nodo_im::nodo_im(cv::Point c, int r):
 nodo_iter_dir::nodo_iter_dir(cv::Point c, int r):
     nodo(c,r)
 {
-    int retorno = system("python3 /home/mike/proyectos/stormbreaker/scripts/directory_dialog.py > tmp_fname.txt");
+    int retorno = system("python3 ./scripts/directory_dialog.py > tmp_fname.txt");
     if(retorno==0) {
     std::ifstream ifs("tmp_fname.txt", std::ios::in);
     std::getline(ifs,dir_name);

@@ -59,7 +59,7 @@ int deserialize_resnet()
 {
     red = new anet_type;
     cout << "hecho.\nDeserializando modelo para resnet... ";
-    deserialize("/home/mike/data/dlib_face_recognition_resnet_model_v1.dat") >> (*red);
+    deserialize("./data/dlib_face_recognition_resnet_model_v1.dat") >> (*red);
     cout << "hecho.\n";
     return 0;
 }

@@ -8,25 +8,20 @@ find_package(Boost 1.58 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Protobuf 3.6.0 REQUIRED )
 find_package(dlib REQUIRED)
+find_package(glog REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "-O2 -Wall -DNDEBUG")
+set(CMAKE_CXX_FLAGS "-O2 -Wall -DNDEBUG -LC:/lib")
 
 #include_directories(include /usr/local/include/google/tensorflow)
 include_directories(include /usr/local/include)
 
-IF (WIN32)
-  # 
-ELSE()
-  # set stuff for other systems
-ENDIF()
-
 add_library(ml
     src/resnet.cpp
     src/clusters.cpp
-    src/detector_facial
+    src/detector_facial.cpp
     src/dlib_mk.cpp)
 
 add_library(mjolnir
@@ -62,14 +57,18 @@ target_include_directories (mjolnir PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories (stormbreaker PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories (organizar PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Link the executable to the Hello library. Since the Hello library has
-# public include directories we will use those link directories when building
-# helloDemo
 #target_link_libraries (stormbreaker ${OpenCV_LIBS} tensorflow_cc tensorflow_framework dlib::dlib caffe protobuf glog boost_system stdc++fs)
 #<caffe> is a linkable library. We're not using it until we figure how to do SSD
-target_link_libraries (ml ${OpenCV_LIBS} protobuf dlib::dlib glog boost_system stdc++fs)
-target_link_libraries (mjolnir ${OpenCV_LIBS} ml protobuf glog boost_system stdc++fs)
-target_link_libraries (stormbreaker ${OpenCV_LIBS} mjolnir protobuf caffe dlib::dlib glog boost_system stdc++fs)
-target_link_libraries (organizar ${OpenCV_LIBS} ml protobuf caffe dlib::dlib glog boost_system stdc++fs)
 
+IF (WIN32)
+target_link_libraries (ml ${OpenCV_LIBS} protobuf dlib::dlib glog boost_system boost_filesystem)
+target_link_libraries (mjolnir ${OpenCV_LIBS} ml protobuf glog boost_system boost_filesystem)
+target_link_libraries (stormbreaker ${OpenCV_LIBS} mjolnir protobuf boost_system boost_filesystem dlib::dlib)
+target_link_libraries (organizar ${OpenCV_LIBS} ml protobuf boost_system boost_filesystem dlib::dlib)
+ELSE()
+target_link_libraries (ml ${OpenCV_LIBS} protobuf dlib::dlib glog boost_system boost_filesystem)
+target_link_libraries (mjolnir ${OpenCV_LIBS} ml protobuf glog boost_system stdc++fs)
+target_link_libraries (stormbreaker ${OpenCV_LIBS} mjolnir protobuf dlib::dlib glog boost_system stdc++fs)
+target_link_libraries (organizar ${OpenCV_LIBS} ml protobuf dlib::dlib glog boost_system stdc++fs)
+ENDIF()
 

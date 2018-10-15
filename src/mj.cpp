@@ -52,8 +52,8 @@ void cb_mouse_static(int event, int x, int y, int flags, void* data)
 
 mj::mj()
 {
-  namedWindow(wname, cv::WINDOW_GUI_NORMAL | WINDOW_AUTOSIZE);
-  createButton("button2",[](int state, void* userdata) {},NULL,QT_CHECKBOX,0);
+  namedWindow(wname);//, cv::WINDOW_GUI_NORMAL | WINDOW_AUTOSIZE);
+  //createButton("button2",[](int state, void* userdata) {},NULL,QT_CHECKBOX,0);
   diagrama = Mat(400,600,CV_8UC3, bckgnd);
   setMouseCallback(wname,cb_mouse_static,this);
 }
@@ -143,7 +143,7 @@ void mj::cb_teclado(char k)
     ptr_ultimo = crear_nodo<nodo_im>();
     break;
   case 'j':
-    ptr_ultimo = crear_nodo<nodo_iter_dir>();
+    ptr_ultimo = crear_nodo<nodo_iter_dir>("./sw_team");
     break;
   case 'l':
     ptr_ultimo = crear_nodo<nodo_laplace>();
