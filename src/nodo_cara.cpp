@@ -1,6 +1,7 @@
 #include "nodo_cara.h"
 #include "input_nodes.h"
 #include "detector_facial.h"
+#include "dataset.h"
 #include <array>
 #include <tuple>
 
@@ -20,7 +21,7 @@ void nodo_cara::procesar()
     if (!msrc.empty())
     {
         mmat = msrc;
-        auto vec_tuplas = gDetectorFacial.procesar(mmat);
+        auto vec_tuplas = mDetectorFacial.procesar(mmat);
 
         for (auto tupla : vec_tuplas) //por cada deteccion...
         {
@@ -28,7 +29,7 @@ void nodo_cara::procesar()
             cv::Rect rectangulo_bbox;
             dlib::matrix<float,0,1> embedding;
             std::tie(prob_det, rectangulo_bbox, embedding) = tupla;
-            std::string label = clasificar_cara(embedding);
+            std::string label = mDetectorFacial.clasificar_cara(embedding);
 
             cv::rectangle(mmat, rectangulo_bbox, cv::Scalar(20, 20, 230), 1, 8, 0);
             cv::putText(mmat,label,rectangulo_bbox.tl(),cv::FONT_HERSHEY_PLAIN,1,cv::Scalar(255,255,255));

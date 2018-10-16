@@ -5,20 +5,12 @@
 #include <dlib/clustering/chinese_whispers.h>
 #include <dlib/svm.h>
 #include <dlib/pixel.h>
+#include "dataset.h"
 
 using namespace std;
 using namespace cv;
 using namespace dlib;
-
-
-float detector_facial::DETECTION_THRESHOLD{0.7};
-detector_facial gDetectorFacial;
-std::vector<dlib::matrix<float,0,1>> gEmbeddings;
-std::vector<dlib::sample_pair> gEdges;
-std::vector<unsigned long> gLabels;
-std::vector<std::string> gLabelVector = {"Tintor","Rommel","Leo","Kuri","Gibran","Pegueros","Abraham",
-                                        "Praneesh","Ian","Mike","Luis","Luis","Nallely","Unknown1", "Unknown2","Unknown3","Unknown4"};
-
+using namespace mk;
 
 detector_facial::detector_facial()
 {
@@ -99,7 +91,7 @@ std::vector<std::pair<float, cv::Rect>> detector_facial::detectar_caras(cv::Mat 
     for (int i = 2;; i += 7)
     {
         float proba = tensorDeteccion.at<cv::Vec3f>(0, 0)[i];
-        if (proba < DETECTION_THRESHOLD)
+        if (proba < mDetectionThreshold)
             break;
 
         uint xi = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 1] * h;
@@ -107,7 +99,7 @@ std::vector<std::pair<float, cv::Rect>> detector_facial::detectar_caras(cv::Mat 
         uint xf = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 3] * h;
         uint yf = tensorDeteccion.at<cv::Vec3f>(0, 0)[i + 4] * w;
 
-        /*entender esto*/
+        /*entender esto. A veces ocurría*/
         if (xi > h || yi > w)
             continue;
         //cout << "{" << xi << ", " << yi << "} {" << xf << ", " << yf << "}pre\n";
@@ -130,45 +122,45 @@ std::vector<std::pair<float, cv::Rect>> detector_facial::detectar_caras(cv::Mat 
     return ret;
 }
 
-void populate_and_cluster()
+void detector_facial::populate_and_cluster(std::string image_dir)
 {
-  nodo_iter_dir mNodoIteradorDirectorios(cv::Point(500,500), 500, "./sw_team");
+  nodo_iter_dir mNodoIteradorDirectorios(cv::Point(500,500), 500, image_dir);
   for(auto s : mNodoIteradorDirectorios.files)
   {
     std::cout << "leyendo " << s << std::endl;
     cv::Mat src = imread(s);
-    auto vec = gDetectorFacial.procesar(src);
-    for(auto e : vec)
+    std::vector<datos_faciales> vec = procesar(src);
+    for(auto instancia : vec)
     {
-        gEmbeddings.push_back(std::get<2>(e));
+        mEmbeddings.push_back(std::get<2>(instancia));
     }
   }
 
-  for (size_t i = 0; i < gEmbeddings.size(); ++i)
+  for (size_t i = 0; i < mEmbeddings.size(); ++i)
   {
-    for (size_t j = i; j < gEmbeddings.size(); ++j)
+    for (size_t j = i; j < mEmbeddings.size(); ++j)
     {
-        auto len = dlib::length(gEmbeddings[i]-gEmbeddings[j]);
+        auto len = dlib::length(mEmbeddings[i]-mEmbeddings[j]);
         if (len < 0.49)
-            gEdges.push_back(dlib::sample_pair(i,j));
+            mEdges.push_back(dlib::sample_pair(i,j));
     }
   }
-  const auto num_clusters = dlib::chinese_whispers(gEdges, gLabels);
-  cout << num_clusters << " clusters found in " << gLabels.size() << " samples" << endl;
-  detector_facial::DETECTION_THRESHOLD = 0.5;
+  const auto num_clusters = dlib::chinese_whispers(mEdges, mLabels);
+  cout << num_clusters << " clusters hallados en " << mLabels.size() << " muestras" << endl;
+  mDetectionThreshold = 0.5;
 }
 
-std::string clasificar_cara(dlib::matrix<float,0,1>& e)
+std::string detector_facial::clasificar_cara(dlib::matrix<float,0,1>& e)
 {
     static bool is_init_with_dataset{false};
     if(!is_init_with_dataset) {
-        populate_and_cluster();
+        populate_and_cluster(mImageDir);
         is_init_with_dataset = true;
     }
     std::string label = "Unknown";
-    std::vector<dlib::matrix<float,0,1>> copiaEmbeddings = gEmbeddings;
-    std::vector<dlib::sample_pair> copiaEdges = gEdges;
-    std::vector<unsigned long> copiaLabels = gLabels;
+    std::vector<dlib::matrix<float,0,1>> copiaEmbeddings = mEmbeddings;
+    std::vector<dlib::sample_pair> copiaEdges = mEdges;
+    std::vector<unsigned long> copiaLabels = mLabels;
     copiaEmbeddings.push_back(e);
     for (size_t i = 0; i < copiaEmbeddings.size(); ++i)
     {
@@ -180,5 +172,5 @@ std::string clasificar_cara(dlib::matrix<float,0,1>& e)
     cout << num_clusters << " clusters found in " << copiaLabels.size() << " samples" << endl;
     //gEtiquetas[gLabels];
 
-    return gLabelVector[copiaLabels[copiaEmbeddings.size()-1]];
+    return mLabelVector[copiaLabels[copiaEmbeddings.size()-1]];
 }

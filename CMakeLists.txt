@@ -21,8 +21,10 @@ include_directories(include /usr/local/include)
 add_library(ml
     src/resnet.cpp
     src/clusters.cpp
-    src/detector_facial.cpp
-    src/dlib_mk.cpp)
+    src/detector_facial
+    src/dlib_mk.cpp
+    src/dataset.cpp
+    )
 
 add_library(mjolnir
     src/mj.cpp
