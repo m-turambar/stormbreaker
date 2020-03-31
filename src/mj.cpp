@@ -3,10 +3,6 @@
 #include "dlib_mk.h"
 #include "input_nodes.h"
 #include "processing_nodes.h"
-#ifndef _WIN32
-#include "deep_nodes.h"
-#endif //_WIN32
-#include "nodo_cara.h"
 
 using namespace std;
 using namespace cv;
@@ -129,10 +125,6 @@ void mj::cb_teclado(char k)
   case 'e':
     ptr_ultimo = crear_nodo<nodo_erosion_dilacion>();
     break;
-  case 'f':
-    ptr_ultimo = crear_nodo<nodo_cara>();
-    //ptr_ultimo = crear_nodo<nodo_caffe>("/home/mike/data/ssd_face_deploy.prototxt.txt", "/home/mike/data/best_bn_full.caffemodel");
-    break;
   case 'g':
     ptr_ultimo = crear_nodo<nodo_gris>();
     break;
@@ -148,17 +140,11 @@ void mj::cb_teclado(char k)
   case 'l':
     ptr_ultimo = crear_nodo<nodo_laplace>();
     break;
-  case 'm':
-    //ptr_ultimo = crear_nodo<nodo_caffe>();
-    break;
   case 'p': //piel
     ptr_ultimo = crear_nodo<nodo_mascara>();
     break;
   case 'q':
     exit=true;
-    break;
-  case 'r':
-    ptr_ultimo = crear_nodo<nodo_cara>();
     break;
   case 's':
     ptr_ultimo = crear_nodo<nodo_hough_circulo>();
