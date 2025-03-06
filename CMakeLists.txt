@@ -6,6 +6,7 @@ project (Stormbreaker)
 
 find_package(Boost 1.58 REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(X11 REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,7 +23,7 @@ add_library(mjolnir
     mjolnir/src/processing_nodes.cpp
     #src/deep_nodes.cpp
     #src/nodo_cara.cpp
-)
+        mjolnir/include/Screenshot.h mjolnir/src/Screenshot.cpp mjolnir/src/nodos_tibianos.cpp mjolnir/include/nodos_tibianos.h)
 
 # Add executable called "stormbreaker" that is built from the source files
 # "main.cpp" and "*.cxx". The extensions are automatically found.
@@ -47,7 +48,7 @@ target_include_directories (mjolnir PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_C
 target_include_directories (stormbreaker PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories (organizar PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries (mjolnir ${OpenCV_LIBS} boost_system stdc++fs pthread)
+target_link_libraries (mjolnir ${OpenCV_LIBS} boost_system stdc++fs pthread ${X11_LIBRARIES})
 target_link_libraries (stormbreaker ${OpenCV_LIBS} mjolnir boost_system stdc++fs)
 target_link_libraries (organizar ${OpenCV_LIBS} boost_system stdc++fs)
 

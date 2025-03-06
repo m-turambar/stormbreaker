@@ -66,6 +66,8 @@ struct nodo_bitwise_and : nodo
   cv::Mat mmascara;
 };
 
+
+
 struct nodo_filtro_bilateral : nodo
 {
   nodo_filtro_bilateral(cv::Point c, int r);

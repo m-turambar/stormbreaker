@@ -30,7 +30,6 @@ void nodo_caffe::procesar()
 
 void nodo_caffe::actuar()
 {
-    //b_mostrar = false;
     if (!msrc.empty())
     {
         mmat = msrc;

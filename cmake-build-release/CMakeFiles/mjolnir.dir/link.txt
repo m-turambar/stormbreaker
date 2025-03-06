@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmjolnir.a  CMakeFiles/mjolnir.dir/mjolnir/src/mj.cpp.o CMakeFiles/mjolnir.dir/mjolnir/src/nodo.cpp.o CMakeFiles/mjolnir.dir/mjolnir/src/input_nodes.cpp.o CMakeFiles/mjolnir.dir/mjolnir/src/processing_nodes.cpp.o CMakeFiles/mjolnir.dir/mjolnir/src/Screenshot.cpp.o CMakeFiles/mjolnir.dir/mjolnir/src/nodos_tibianos.cpp.o
+/usr/bin/ranlib libmjolnir.a

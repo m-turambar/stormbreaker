@@ -207,3 +207,4 @@ void nodo_hough_circulo::procesar()
         }
     }
 }
+

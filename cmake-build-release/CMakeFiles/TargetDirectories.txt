@@ -1,0 +1,5 @@
+/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/rebuild_cache.dir
+/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/edit_cache.dir
+/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/organizar.dir
+/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/mjolnir.dir
+/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/stormbreaker.dir

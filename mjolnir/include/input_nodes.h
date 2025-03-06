@@ -4,10 +4,25 @@
 #include <thread>
 #include "nodo.h"
 
+struct nodo_im_selector : nodo
+{
+  nodo_im_selector(cv::Point c, int r);
+  void procesar() override {};
+};
+
 struct nodo_im : nodo
 {
-  nodo_im(cv::Point c, int r);
-  void procesar() {};
+    nodo_im(cv::Point c, int r, const std::string path);
+    void procesar() override {};
+};
+
+struct nodo_subs : nodo
+{
+    nodo_subs(cv::Point c, int r, const cv::Rect);
+    void procesar() override;
+
+private:
+    const cv::Rect rec;
 };
 
 
@@ -18,7 +33,7 @@ struct nodo_iter_dir : nodo
 
     void procesar() override { };
 
-    virtual void actuar() override;
+    void actuar() override;
 
   std::vector<std::string> files;
   std::string dir_name;
@@ -27,20 +42,17 @@ struct nodo_iter_dir : nodo
 
 struct nodo_video : nodo
 {
-    nodo_video(cv::Point c, int r, bool async=true);
-    virtual ~nodo_video() { hilo_camara.join(); }
-    virtual void procesar() override;
+    nodo_video(cv::Point c, int r);
+    void procesar() override;
     std::vector<double> get_camera_properties();
 
-    /* Aqui cambiamos a un modo asincrono de captura, para no tener que esperar a la camara cuando nos toque leer su frame. */
-    void capture_loop();
-    cv::Mat get_video_frame();
-    void set_video_frame(cv::Mat& f);
-
     cv::VideoCapture cap;
-    std::mutex mtx_v;
-    std::thread hilo_camara;
-    cv::Mat inter; //ugh
+};
+
+struct nodo_ss : nodo
+{
+    nodo_ss(cv::Point c, int r);
+    void procesar() override;
 };
 
 

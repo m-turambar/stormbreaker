@@ -1,0 +1,63 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_d2bbe/fast && /usr/bin/make -f CMakeFiles/cmTC_d2bbe.dir/build.make CMakeFiles/cmTC_d2bbe.dir/build
+make[1]: Entering directory '/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d2bbe.dir/src.c.o
+/usr/bin/cc   -fPIC -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_d2bbe.dir/src.c.o   -c /home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_d2bbe
+/home/mike/Desktop/clion-2019.3.5/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d2bbe.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_d2bbe.dir/src.c.o  -o cmTC_d2bbe 
+CMakeFiles/cmTC_d2bbe.dir/src.c.o: In function `main':
+src.c:(.text+0x3e): undefined reference to `pthread_create'
+src.c:(.text+0x4a): undefined reference to `pthread_detach'
+src.c:(.text+0x5b): undefined reference to `pthread_join'
+src.c:(.text+0x6f): undefined reference to `pthread_atfork'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_d2bbe.dir/build.make:86: recipe for target 'cmTC_d2bbe' failed
+make[1]: *** [cmTC_d2bbe] Error 1
+make[1]: Leaving directory '/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_d2bbe/fast' failed
+make: *** [cmTC_d2bbe/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_eca50/fast && /usr/bin/make -f CMakeFiles/cmTC_eca50.dir/build.make CMakeFiles/cmTC_eca50.dir/build
+make[1]: Entering directory '/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_eca50.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_eca50.dir/CheckFunctionExists.c.o   -c /home/mike/Desktop/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/CheckFunctionExists.c
+Linking C executable cmTC_eca50
+/home/mike/Desktop/clion-2019.3.5/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_eca50.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_eca50.dir/CheckFunctionExists.c.o  -o cmTC_eca50 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_eca50.dir/build.make:86: recipe for target 'cmTC_eca50' failed
+make[1]: *** [cmTC_eca50] Error 1
+make[1]: Leaving directory '/home/mike/proyectos/stormbreaker/cmake-build-release/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_eca50/fast' failed
+make: *** [cmTC_eca50/fast] Error 2
+
+
+

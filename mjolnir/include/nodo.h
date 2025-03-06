@@ -33,9 +33,11 @@ struct nodo
   void desuscribir_de(nodo* src);
   /*la diferencia entre estos dos métodos es ambigüa*/
   virtual void procesar()=0;
-  virtual void actuar() { b_mostrar = true; }
+  virtual void actuar() { b_mostrar = !b_mostrar; }
 
-  virtual void mostrar() { if(!mmat.empty()) {cv::namedWindow(sid/*, cv::WINDOW_GUI_EXPANDED*/); cv::imshow(sid,mmat); } }
+  virtual void mostrar() {
+      if(b_mostrar) { if(!mmat.empty()) {cv::namedWindow(sid/*, cv::WINDOW_GUI_EXPANDED*/); cv::imshow(sid,mmat); } }
+  }
   virtual void desactivar() { b_mostrar = false; /*cv::destroyWindow(sid);*/ }
   virtual ~nodo();
 

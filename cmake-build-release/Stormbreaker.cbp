@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Stormbreaker"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\share\;CMake Files\..\..\..\..\usr\local\share\OpenCV\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="organizar">
+				<Option output="/home/mike/proyectos/stormbreaker/cmake-build-release/organizar" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DOPENCV_TRAITS_ENABLE_DEPRECATED"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/include"/>
+					<Add directory="/home/mike/proyectos/stormbreaker"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 organizar"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="organizar/fast">
+				<Option output="/home/mike/proyectos/stormbreaker/cmake-build-release/organizar" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DOPENCV_TRAITS_ENABLE_DEPRECATED"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/include"/>
+					<Add directory="/home/mike/proyectos/stormbreaker"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 organizar/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mjolnir">
+				<Option output="/home/mike/proyectos/stormbreaker/cmake-build-release/libmjolnir.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DOPENCV_TRAITS_ENABLE_DEPRECATED"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/include"/>
+					<Add directory="/home/mike/proyectos/stormbreaker"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/mjolnir/include"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 mjolnir"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mjolnir/fast">
+				<Option output="/home/mike/proyectos/stormbreaker/cmake-build-release/libmjolnir.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DOPENCV_TRAITS_ENABLE_DEPRECATED"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/include"/>
+					<Add directory="/home/mike/proyectos/stormbreaker"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/mjolnir/include"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 mjolnir/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="stormbreaker">
+				<Option output="/home/mike/proyectos/stormbreaker/cmake-build-release/stormbreaker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DOPENCV_TRAITS_ENABLE_DEPRECATED"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/include"/>
+					<Add directory="/home/mike/proyectos/stormbreaker"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/mjolnir/include"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 stormbreaker"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="stormbreaker/fast">
+				<Option output="/home/mike/proyectos/stormbreaker/cmake-build-release/stormbreaker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/mike/proyectos/stormbreaker/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DOPENCV_TRAITS_ENABLE_DEPRECATED"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/include"/>
+					<Add directory="/home/mike/proyectos/stormbreaker"/>
+					<Add directory="/home/mike/proyectos/stormbreaker/mjolnir/include"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 stormbreaker/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/mike/proyectos/stormbreaker/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/mike/proyectos/stormbreaker/main.cpp">
+			<Option target="stormbreaker"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/include/Screenshot.h">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/include/nodos_tibianos.h">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/src/Screenshot.cpp">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/src/input_nodes.cpp">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/src/mj.cpp">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/src/nodo.cpp">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/src/nodos_tibianos.cpp">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/mjolnir/src/processing_nodes.cpp">
+			<Option target="mjolnir"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/utils/organizar.cpp">
+			<Option target="organizar"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/utils/sistema_archivos.cpp">
+			<Option target="organizar"/>
+			<Option target="stormbreaker"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/../../../../usr/local/share/OpenCV/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/../../../../usr/local/share/OpenCV/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/../../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/home/mike/proyectos/stormbreaker/../../../../usr/local/share/OpenCV/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

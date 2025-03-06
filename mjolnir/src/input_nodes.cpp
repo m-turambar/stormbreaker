@@ -2,14 +2,15 @@
 #include <opencv2/videoio/registry.hpp>
 #include "input_nodes.h"
 #include "utils/sistema_archivos.h"
+#include "Screenshot.h"
 
 using namespace std;
 
-nodo_video::nodo_video(cv::Point c, int r, bool async):
+nodo_video::nodo_video(cv::Point c, int r):
     nodo(c,r)
 {
     sid = "Video" + sid;
-    cap.open("/dev/video1");
+    cap.open("/dev/video0");
 /*
     cap.open("/dev/video1");
     //cap.open("/dev/video0", cv::CAP_DSHOW);
@@ -30,8 +31,6 @@ nodo_video::nodo_video(cv::Point c, int r, bool async):
     for(auto b : backends)
         cout << "\t" << b << "\n";
         */
-
-    hilo_camara = std::thread(&nodo_video::capture_loop, this);
 }
 
 vector<double> nodo_video::get_camera_properties() {
@@ -49,36 +48,14 @@ void nodo_video::procesar()
 {
     auto tiempo1 = std::chrono::system_clock::now();
 
-    //get_video_frame();
     cap >> mmat;
+    cout << mmat.rows << "x" << mmat.cols << endl;
     auto tiempo2 = std::chrono::system_clock::now();
-    auto dur = std::chrono::duration_cast<chrono::microseconds>(tiempo2 - tiempo1).count();
-    cout << "nodo_video::procesar(): "<< dur << "us\n";
+    auto dur = std::chrono::duration_cast<chrono::milliseconds>(tiempo2 - tiempo1).count();
+    cout << "nodo_video::procesar(): "<< dur << "ms\n";
 }
 
-void nodo_video::capture_loop() {
-    cv::Mat frame;
-    cout << "hello?" << b_mostrar << endl;
-    while(b_mostrar)
-    {
-        cap >> frame;
-        cout << frame.rows << "x" << frame.cols << endl;
-        set_video_frame(frame);
-    }
-}
-
-cv::Mat nodo_video::get_video_frame() {
-    lock_guard<mutex> lock(mtx_v);
-    inter.copyTo(mmat);
-    return mmat;
-}
-
-void nodo_video::set_video_frame(cv::Mat& f) {
-    lock_guard<mutex> lock(mtx_v);
-    f.copyTo(inter);
-};
-
-nodo_im::nodo_im(cv::Point c, int r):
+nodo_im_selector::nodo_im_selector(cv::Point c, int r):
     nodo(c,r)
 {
     int retorno = system("python3 ./scripts/file_dialog.py > tmp_fname.txt");
@@ -133,3 +110,46 @@ void nodo_iter_dir::actuar() {
     for(auto n : suscriptores)
         n->msrc = mmat;
   }
+
+nodo_ss::nodo_ss(cv::Point c, int r) : nodo(c, r) {
+    b_mostrar=false;
+}
+
+void nodo_ss::procesar() {
+  int Width = 0;
+  int Height = 0;
+  int Bpp = 0;
+  std::vector<std::uint8_t> Pixels;
+
+  ImageFromDisplay(Pixels, Width, Height, Bpp);
+
+  if (Width && Height)
+  {
+    cv::Mat img = cv::Mat(Height, Width, Bpp > 24 ? CV_8UC4 : CV_8UC3, &Pixels[0]); //Mat(Size(Height, Width), Bpp > 24 ? CV_8UC4 : CV_8UC3, &Pixels[0]);
+    //cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
+    img.copyTo(mmat);
+  }
+}
+
+nodo_im::nodo_im(cv::Point c, int r, const std::string path) : nodo(c, r)
+{
+    b_mostrar=false;
+    mmat = cv::imread(path, cv::IMREAD_COLOR);
+    cout << "nodo_im::nodo_im -> " << path << " dims==" << mmat.dims << '\n';
+    if(mmat.dims == 0)
+        throw std::runtime_error("empty image read");
+}
+
+nodo_subs::nodo_subs(cv::Point c, int r, const cv::Rect rec_arg)
+    : nodo(c, r), rec(rec_arg)
+    {
+        sid = "nodo_subs";
+    }
+
+void nodo_subs::procesar() {
+    if(!msrc.empty()) {
+        mmat = msrc(rec);
+        //cout << mmat.rows << "x" << mmat.cols << endl;
+    }
+
+}

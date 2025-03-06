@@ -90,8 +90,8 @@ void nodo::dibujarse()
   }
   cv::putText(mj::diagrama, sid, tcentro, FONT_HERSHEY_PLAIN, 1, COLOR_BLANCO, 1, LINE_AA);
 
-  if(b_mostrar)
-    mostrar();
+
+  mostrar();
 }
 
 void nodo::arrastrar(const cv::Point pt)
